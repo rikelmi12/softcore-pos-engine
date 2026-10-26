@@ -1,0 +1,2676 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>Painel Admin</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="admin.css?v=20261016-frete" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+<!-- ═══════════════════════ TELA DE LOGIN ═══════════════════════ -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-bg">
+    <div class="login-blob b1"></div>
+    <div class="login-blob b2"></div>
+    <div class="login-blob b3"></div>
+  </div>
+  <div class="login-card" id="loginCard">
+    <div class="login-logo">
+      <div class="login-logo-icon">🍕</div>
+      <h1>Bem-vindo</h1>
+      <span id="loginPanelSubtitle">Sua Empresa • Painel Administrativo</span>
+    </div>
+    <form class="login-form" id="loginForm" onsubmit="handleLogin(event)">
+      <div class="form-group">
+        <label>Usuário</label>
+        <div class="input-icon-wrap">
+          <span class="input-ico">👤</span>
+          <input type="text" id="loginUser" placeholder="admin" autocomplete="username" required />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Senha</label>
+        <div class="input-icon-wrap">
+          <span class="input-ico">🔑</span>
+          <input type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password" required />
+          <button type="button" class="toggle-pass" onclick="togglePassword()">👁</button>
+        </div>
+      </div>
+      <button type="submit" class="btn-login">Entrar no Painel</button>
+      <div class="login-error" id="loginError"></div>
+    </form>
+  </div>
+</div>
+
+<!-- ═══════════════════════ APP PRINCIPAL ═══════════════════════ -->
+<div class="admin-app" id="adminApp" style="display:none;">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo" id="sidebarLogo" onclick="openSidebarFromLogo()" title="Abrir menu">🍕</div>
+      <div class="sidebar-brand">
+        <span class="sb-name" id="sbStoreName">Sua Empresa</span>
+        <span class="sb-role">Administrador</span>
+      </div>
+      <button class="sidebar-toggle-btn" id="sidebarToggle" onclick="toggleSidebar()">☰</button>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Visão Geral</div>
+      <button class="nav-item active" data-page="dashboard" onclick="navigate('dashboard')">
+        <span class="nav-ico">📊</span><span class="nav-label">Dashboard</span>
+      </button>
+
+      <div class="nav-section-label">Cardápio</div>
+      <button class="nav-item" data-page="products" onclick="navigate('products')">
+        <span class="nav-ico">🍕</span><span class="nav-label">Produtos</span>
+        <span class="nav-badge" id="navBadgeProducts">0</span>
+      </button>
+      <button class="nav-item" data-page="borders" onclick="navigate('borders')">
+        <span class="nav-ico">🧀</span><span class="nav-label">Bordas</span>
+      </button>
+      <button class="nav-item" data-page="categories" onclick="navigate('categories')">
+        <span class="nav-ico">📂</span><span class="nav-label">Categorias</span>
+      </button>
+      <button class="nav-item" data-page="combos" onclick="navigate('combos')">
+        <span class="nav-ico">⭐</span><span class="nav-label">Combos</span>
+      </button>
+      <button class="nav-item" data-page="promotions" onclick="navigate('promotions')">
+        <span class="nav-ico">🏷️</span><span class="nav-label">Promoções</span>
+      </button>
+      <button class="nav-item" data-page="stock" onclick="navigate('stock')">
+        <span class="nav-ico">📦</span><span class="nav-label">Estoque</span>
+      </button>
+      <button class="nav-item" data-page="announcements" onclick="navigate('announcements')">
+        <span class="nav-ico">📢</span><span class="nav-label">Anúncios</span>
+        <span class="nav-badge" id="navBadgeAnnouncements">0</span>
+      </button>
+
+      <div class="nav-section-label">Configurações</div>
+      <button class="nav-item" data-page="company" onclick="navigate('company')">
+        <span class="nav-ico">🏠</span><span class="nav-label">Empresa</span>
+      </button>
+      <button class="nav-item" data-page="visual" onclick="navigate('visual')">
+        <span class="nav-ico">🎨</span><span class="nav-label">Visual do Site</span>
+      </button>
+      <button class="nav-item" data-page="orders" onclick="navigate('orders')">
+        <span class="nav-ico">🛒</span><span class="nav-label">Pedidos</span>
+      </button>
+      <button class="nav-item" data-page="sefaz" onclick="navigate('sefaz')">
+        <span class="nav-ico">NF</span><span class="nav-label">SEFAZ</span>
+      </button>
+
+      <div class="nav-section-label">Sistema</div>
+      <button class="nav-item" data-page="team" onclick="navigate('team')">
+        <span class="nav-ico">👥</span><span class="nav-label">Equipe do Salão</span>
+      </button>
+      <button class="nav-item" data-page="order-logs" onclick="navigate('order-logs')">
+        <span class="nav-ico">🧾</span><span class="nav-label">Pedidos Registrados</span>
+        <span class="nav-badge" id="navBadgeOrderLogs">0</span>
+      </button>
+      <button class="nav-item" data-page="cashier" onclick="navigate('cashier')">
+        <span class="nav-ico">💵</span><span class="nav-label">Caixa</span>
+        <span class="nav-badge" id="navBadgeCashier">Fechado</span>
+      </button>
+      <button class="nav-item" onclick="openSite()">
+        <span class="nav-ico">🌐</span><span class="nav-label">Ver Site</span>
+      </button>
+      <button class="nav-item" onclick="exportData()">
+        <span class="nav-ico">💾</span><span class="nav-label">Exportar Dados</span>
+      </button>
+      <button class="nav-item danger" onclick="handleLogout()">
+        <span class="nav-ico">🚪</span><span class="nav-label">Sair</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="store-status" id="storeStatusIndicator">
+        <span class="status-dot open"></span>
+        <span id="storeStatusText">Loja Aberta</span>
+        <label class="toggle-switch sm">
+          <input type="checkbox" id="storeOpenToggle" checked onchange="toggleStoreStatus(this.checked)" />
+          <span class="toggle-track"></span>
+        </label>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── CONTEÚDO PRINCIPAL ── -->
+  <main class="main-content" id="mainContent">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <button class="topbar-menu-btn" onclick="toggleSidebar()">☰</button>
+      <div class="topbar-title" id="topbarTitle">Dashboard</div>
+      <div class="topbar-actions">
+        <div class="topbar-search" id="topbarSearch" style="display:none;">
+          <button type="button" class="admin-search-button" aria-label="Pesquisar produtos" title="Pesquisar" onclick="focusAdminSearch('global')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path>
+            </svg>
+          </button>
+          <input type="text" id="globalSearch" placeholder="Buscar produto..." oninput="handleGlobalSearch(this.value)" />
+        </div>
+        <button class="topbar-user" id="adminProfileButton" type="button" onclick="openAdminProfile()" aria-label="Abrir perfil do administrador" title="Editar nome e senha">
+          <span class="topbar-avatar" id="adminProfileAvatar" aria-hidden="true">A</span>
+          <span id="adminProfileName">Admin</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- ══════════════════ PÁGINA: DASHBOARD ══════════════════ -->
+    <section class="page active" id="page-dashboard">
+      <div class="page-header">
+        <h2 id="dashboardWelcomeTitle">Bem-vindo ao Painel da Sua Empresa 👋</h2>
+        <p id="dashboardWelcomeSubtitle">Gerencie seu cardápio e configurações da sua empresa aqui.</p>
+      </div>
+
+      <!-- Cards de resumo -->
+      <div class="dash-cards">
+        <div class="dash-card red">
+          <div class="dc-icon">🍕</div>
+          <div class="dc-info">
+            <div class="dc-number" id="dcProducts">0</div>
+            <div class="dc-label">Produtos</div>
+          </div>
+        </div>
+        <div class="dash-card orange">
+          <div class="dc-icon">📂</div>
+          <div class="dc-info">
+            <div class="dc-number" id="dcCategories">0</div>
+            <div class="dc-label">Categorias</div>
+          </div>
+        </div>
+        <div class="dash-card green">
+          <div class="dc-icon">⭐</div>
+          <div class="dc-info">
+            <div class="dc-number" id="dcCombos">0</div>
+            <div class="dc-label">Combos Ativos</div>
+          </div>
+        </div>
+        <div class="dash-card blue">
+          <div class="dc-icon">🏷️</div>
+          <div class="dc-info">
+            <div class="dc-number" id="dcPromos">0</div>
+            <div class="dc-label">Promoções Ativas</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grid de atalhos e status -->
+      <div class="dash-grid">
+        <!-- Produtos recentes -->
+        <div class="dash-widget">
+          <div class="widget-header">
+            <h3>Produtos Recentes</h3>
+            <button class="btn-link" onclick="navigate('products')">Ver todos →</button>
+          </div>
+          <div class="widget-body" id="dashRecentProducts">
+            <div class="empty-state-sm">Nenhum produto cadastrado</div>
+          </div>
+        </div>
+
+        <!-- Status da loja -->
+        <div class="dash-widget">
+          <div class="widget-header"><h3>Status & Configurações</h3></div>
+          <div class="widget-body">
+            <div class="status-list" id="dashStatusList"></div>
+          </div>
+        </div>
+
+        <!-- Promoções ativas -->
+        <div class="dash-widget">
+          <div class="widget-header">
+            <h3>Promoções Ativas</h3>
+            <button class="btn-link" onclick="navigate('promotions')">Gerenciar →</button>
+          </div>
+          <div class="widget-body" id="dashActivePromos">
+            <div class="empty-state-sm">Nenhuma promoção ativa</div>
+          </div>
+        </div>
+
+        <!-- Acesso rápido -->
+        <div class="dash-widget">
+          <div class="widget-header"><h3>Acesso Rápido</h3></div>
+          <div class="widget-body">
+            <div class="quick-actions">
+              <button class="qa-btn" onclick="navigate('products'); setTimeout(openProductModal,100)">
+                <span>➕</span> Novo Produto
+              </button>
+              <button class="qa-btn" onclick="navigate('categories'); setTimeout(openCategoryModal,100)">
+                <span>📂</span> Nova Categoria
+              </button>
+              <button class="qa-btn" onclick="navigate('combos'); setTimeout(openComboModal,100)">
+                <span>⭐</span> Novo Combo
+              </button>
+              <button class="qa-btn" onclick="navigate('promotions'); setTimeout(openPromotionModal,100)">
+                <span>🏷️</span> Nova Promoção
+              </button>
+              <button class="qa-btn" onclick="navigate('company')">
+                <span>🏠</span> Configurar Empresa
+              </button>
+              <button class="qa-btn" onclick="navigate('orders')">
+                <span>🛒</span> Config. Pedidos
+              </button>
+              <button class="qa-btn" onclick="navigate('sefaz')">
+                <span>NF</span> Config. SEFAZ
+              </button>
+              <button class="qa-btn" onclick="navigate('cashier')">
+                <span>💵</span> Abrir Caixa
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════ PÁGINA: PRODUTOS ══════════════════ -->
+    <section class="page" id="page-products">
+      <div class="page-header">
+        <div>
+          <h2>Produtos</h2>
+          <p>Gerencie todos os itens do cardápio</p>
+        </div>
+        <button class="btn-primary" onclick="openProductModal()">+ Novo Produto</button>
+      </div>
+
+      <!-- Filtros e busca -->
+      <div class="table-controls">
+        <div class="tc-search">
+          <button type="button" class="admin-search-button" aria-label="Pesquisar produtos" title="Pesquisar" onclick="focusAdminSearch('products')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path>
+            </svg>
+          </button>
+          <input type="text" id="productSearch" placeholder="Buscar produto..." oninput="handleProductSearch(this.value)" />
+        </div>
+        <div class="tc-filters">
+          <select id="productCatFilter" onchange="handleProductFilterChange()">
+            <option value="">Todas as categorias</option>
+          </select>
+          <select id="productStatusFilter" onchange="handleProductFilterChange()">
+            <option value="">Todos os status</option>
+            <option value="active">Ativos</option>
+            <option value="inactive">Inativos</option>
+          </select>
+          <select id="productSort" onchange="handleProductFilterChange()">
+            <option value="name">Nome A-Z</option>
+            <option value="name-desc">Nome Z-A</option>
+            <option value="price">Menor preço</option>
+            <option value="price-desc">Maior preço</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="products-admin-grid" id="productsGrid"></div>
+      <div class="table-empty" id="productsEmpty" style="display:none;">
+        <div class="empty-icon">🍕</div>
+        <p>Nenhum produto encontrado</p>
+        <button class="btn-primary" onclick="openProductModal()">Adicionar primeiro produto</button>
+      </div>
+    </section>
+
+    <section class="page" id="page-borders">
+      <div class="page-header">
+        <div>
+          <h2>Bordas das Pizzas</h2>
+          <p>Gerencie as opções de borda e seus valores por tamanho</p>
+        </div>
+        <div class="page-header-actions">
+          <button class="btn-outline" onclick="addBorderOptionRow()">+ Nova borda</button>
+          <button class="btn-primary" onclick="saveBorderCatalog()">💾 Salvar bordas</button>
+        </div>
+      </div>
+
+      <div class="settings-card">
+        <div id="bordersConfigList"></div>
+      </div>
+    </section>
+
+    <section class="page" id="page-stock">
+      <div class="page-header">
+        <div><h2>Estoque</h2><p>Saldos, custos e margem bruta estimada dos produtos controlados</p></div>
+        <div class="page-header-actions stock-header-actions">
+          <label class="stock-period-control" for="stockPeriodFilter"><span>Período</span><select id="stockPeriodFilter" onchange="changeStockPeriod(this.value)"><option value="7d">7 dias</option><option value="30d" selected>30 dias</option><option value="90d">90 dias</option><option value="all">Todo o histórico</option></select></label>
+          <button class="btn-outline" type="button" onclick="loadStock({ announce: true })">Atualizar</button>
+          <button class="btn-outline" type="button" onclick="document.getElementById('stockXmlFile').click()">Importar XML da NF-e</button>
+          <button class="btn-primary" type="button" onclick="openStockMovement('entry')">+ Dar entrada</button>
+          <input type="file" id="stockXmlFile" accept=".xml,text/xml,application/xml" hidden onchange="previewStockXml(this)" />
+        </div>
+      </div>
+
+      <div class="stock-health-row" aria-label="Situação geral do estoque">
+        <span><strong id="stockProductCount">0</strong> itens controlados</span>
+        <span class="stock-health-alert"><strong id="stockLowCount">0</strong> com estoque baixo</span>
+      </div>
+
+      <p class="stock-managerial-note" role="note"><strong>Lucro bruto estimado:</strong> preço de venda menos CMV. Não inclui impostos, taxas ou despesas fixas e não confirma o recebimento no Caixa. As métricas consideram apenas produtos com controle de estoque; pizzas e ingredientes sem ficha técnica não entram no CMV.</p>
+
+      <div class="stock-kpi-grid" id="stockKpiGrid" aria-label="Indicadores gerenciais do estoque" aria-busy="false">
+        <article class="stock-kpi stock-kpi-primary"><span>Valor em estoque</span><strong id="stockInventoryValue">R$ 0,00</strong><small id="stockInventoryUnits">0 unidades atuais</small></article>
+        <article class="stock-kpi stock-kpi-entry"><span>Entradas</span><strong id="stockEntryValue">R$ 0,00</strong><small id="stockEntryUnits">0 unidades no período</small></article>
+        <article class="stock-kpi stock-kpi-output"><span>Saídas</span><strong id="stockOutputUnits">0 unidades</strong><small id="stockSalesUnits">0 por pedidos</small></article>
+        <article class="stock-kpi stock-kpi-revenue"><span>Receita dos pedidos</span><strong id="stockSalesRevenue">R$ 0,00</strong><small>Pedidos registrados no período</small></article>
+        <article class="stock-kpi stock-kpi-cost"><span>CMV estimado</span><strong id="stockCostOfGoods">R$ 0,00</strong><small>Custo das unidades vendidas</small></article>
+        <article class="stock-kpi stock-kpi-profit"><span>Lucro bruto estimado</span><strong id="stockGrossProfit">R$ 0,00</strong><small id="stockGrossMargin">Margem estimada 0%</small></article>
+        <article class="stock-kpi stock-kpi-potential"><span>Lucro potencial do estoque</span><strong id="stockPotentialGrossProfit">R$ 0,00</strong><small id="stockPotentialRevenue">Receita potencial R$ 0,00</small></article>
+      </div>
+
+      <section class="stock-section" aria-labelledby="stockBalancesTitle">
+        <div class="stock-section-heading"><div><h3 id="stockBalancesTitle">Produtos e saldos</h3><p>Custo médio, preço e potencial do estoque disponível.</p></div></div>
+        <div class="stock-grid" id="stockGrid"></div>
+      </section>
+
+      <section class="stock-section" aria-labelledby="stockRankingTitle">
+        <div class="stock-section-heading"><div><h3 id="stockRankingTitle">Ranking por produto</h3><p id="stockRankingPeriodLabel">Desempenho nos últimos 30 dias.</p></div></div>
+        <div class="stock-ranking-wrap" id="stockRanking"></div>
+      </section>
+
+      <section class="stock-section" aria-labelledby="stockHistoryTitle">
+        <div class="stock-section-heading"><div><h3 id="stockHistoryTitle">Histórico de movimentações</h3><p>Custos, receita estimada e origem de cada alteração.</p></div></div>
+        <div class="stock-history-list" id="stockHistory"></div>
+      </section>
+    </section>
+
+    <!-- ══════════════════ PÁGINA: CATEGORIAS ══════════════════ -->
+    <section class="page" id="page-categories">
+      <div class="page-header">
+        <div>
+          <h2>Categorias</h2>
+          <p>Organize as categorias do cardápio</p>
+        </div>
+        <button class="btn-primary" onclick="openCategoryModal()">+ Nova Categoria</button>
+      </div>
+
+      <div class="categories-grid" id="categoriesGrid"></div>
+      <div class="table-empty" id="categoriesEmpty" style="display:none;">
+        <div class="empty-icon">📂</div>
+        <p>Nenhuma categoria criada</p>
+        <button class="btn-primary" onclick="openCategoryModal()">Criar primeira categoria</button>
+      </div>
+    </section>
+
+    <!-- ══════════════════ PÁGINA: COMBOS ══════════════════ -->
+    <section class="page" id="page-combos">
+      <div class="page-header">
+        <div>
+          <h2>Combos</h2>
+          <p>Crie e gerencie combos especiais</p>
+        </div>
+        <button class="btn-primary" onclick="openComboModal()">+ Novo Combo</button>
+      </div>
+
+      <div class="combos-admin-grid" id="combosAdminGrid"></div>
+      <div class="table-empty" id="combosEmpty" style="display:none;">
+        <div class="empty-icon">⭐</div>
+        <p>Nenhum combo criado</p>
+        <button class="btn-primary" onclick="openComboModal()">Criar primeiro combo</button>
+      </div>
+    </section>
+
+    <!-- ══════════════════ PÁGINA: PROMOÇÕES ══════════════════ -->
+    <section class="page" id="page-promotions">
+      <div class="page-header">
+        <div>
+          <h2>Promoções</h2>
+          <p>Banners e promoções especiais</p>
+        </div>
+        <button class="btn-primary" onclick="openPromotionModal()">+ Nova Promoção</button>
+      </div>
+
+      <div class="promos-admin-grid" id="promosAdminGrid"></div>
+      <div class="table-empty" id="promosEmpty" style="display:none;">
+        <div class="empty-icon">🏷️</div>
+        <p>Nenhuma promoção criada</p>
+        <button class="btn-primary" onclick="openPromotionModal()">Criar primeira promoção</button>
+      </div>
+    </section>
+
+    <!-- ══════════════════ PÁGINA: ANÚNCIOS ══════════════════ -->
+    <section class="page" id="page-announcements">
+      <div class="page-header">
+        <div>
+          <h2>Anúncios</h2>
+          <p>Fotos e avisos que aparecem no cardápio do cliente</p>
+        </div>
+        <button class="btn-primary" onclick="openAnnouncementModal()">+ Novo Anúncio</button>
+      </div>
+
+      <div class="announcements-admin-grid" id="announcementsAdminGrid"></div>
+      <div class="table-empty" id="announcementsEmpty" style="display:none;">
+        <div class="empty-icon">📢</div>
+        <p>Nenhum anúncio criado</p>
+        <button class="btn-primary" onclick="openAnnouncementModal()">Criar primeiro anúncio</button>
+      </div>
+    </section>
+
+    <!-- ══════════════════ PÁGINA: EMPRESA ══════════════════ -->
+    <section class="page" id="page-company">
+      <div class="page-header">
+        <h2>Informações da Empresa</h2>
+        <button class="btn-primary" onclick="saveCompanyInfo()">💾 Salvar Alterações</button>
+      </div>
+
+      <div class="settings-grid">
+        <!-- Identidade -->
+        <div class="settings-card">
+          <h3 class="settings-card-title">🏠 Identidade</h3>
+          <div class="form-group">
+            <label>Nome da Empresa</label>
+            <input type="text" id="cfgStoreName" />
+          </div>
+          <div class="form-group">
+            <label>Slogan</label>
+            <input type="text" id="cfgSlogan" />
+          </div>
+          <div class="form-group">
+            <label>Descrição</label>
+            <textarea id="cfgDescription" rows="3"></textarea>
+          </div>
+          <div class="form-group">
+            <label>Texto do Rodapé</label>
+            <input type="text" id="cfgFooterText" />
+          </div>
+        </div>
+
+        <!-- Endereço -->
+        <div class="settings-card">
+          <h3 class="settings-card-title">📍 Endereço</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Rua / Logradouro</label>
+              <input type="text" id="cfgStreet" />
+            </div>
+            <div class="form-group sm">
+              <label>Número</label>
+              <input type="text" id="cfgNumber" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Bairro</label>
+            <input type="text" id="cfgNeighborhood" />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Cidade</label>
+              <input type="text" id="cfgCity" />
+            </div>
+            <div class="form-group sm">
+              <label>Estado</label>
+              <input type="text" id="cfgState" maxlength="2" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>CEP</label>
+            <input type="text" id="cfgCep" maxlength="9" />
+          </div>
+        </div>
+
+        <!-- Contato -->
+        <div class="settings-card">
+          <h3 class="settings-card-title">📞 Contato</h3>
+          <div class="form-group">
+            <label>Telefone</label>
+            <input type="text" id="cfgPhone" />
+          </div>
+          <div class="form-group">
+            <label>WhatsApp (com DDI+DDD, sem símbolos)</label>
+            <input type="text" id="cfgWhatsapp" placeholder="5511+55 (XX) XXXXX-XXXX" />
+          </div>
+          <div class="form-group">
+            <label>E-mail</label>
+            <input type="email" id="cfgEmail" />
+          </div>
+          <div class="form-group">
+            <label>Instagram</label>
+            <input type="text" id="cfgInstagram" placeholder="@suaempresa" />
+          </div>
+          <div class="form-group">
+            <label>Facebook</label>
+            <input type="text" id="cfgFacebook" placeholder="facebook.com/suaempresa" />
+          </div>
+        </div>
+
+        <!-- Horários -->
+        <div class="settings-card">
+          <h3 class="settings-card-title">⏰ Horários de Funcionamento</h3>
+          <div class="schedule-list" id="scheduleList">
+            <!-- gerado por JS -->
+          </div>
+        </div>
+
+        <!-- Logo e Banner -->
+        <div class="settings-card">
+          <h3 class="settings-card-title">🖼️ Logo & Banner</h3>
+          <div class="form-group">
+            <label>Logo da Empresa</label>
+            <div class="image-upload-area" id="logoUploadArea">
+              <div class="img-preview-wrap logo" id="logoPreview">
+                <span class="img-placeholder">🍕</span>
+              </div>
+              <div class="img-upload-controls">
+                <input type="file" id="logoFile" accept="image/*" onchange="handleImageUpload('logo', this)" style="display:none;" />
+                <button class="btn-outline sm" type="button" onclick="document.getElementById('logoFile').click()">📁 Escolher Logo</button>
+                <button class="btn-outline sm" type="button" onclick="openCurrentImageCropper('logo')">✂️ Enquadrar</button>
+                <button class="btn-danger-outline sm" type="button" onclick="clearImage('logo')">✕ Remover</button>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Banner Principal</label>
+            <div class="image-upload-area" id="bannerUploadArea">
+              <div class="img-preview-wrap banner" id="bannerPreview">
+                <span class="img-placeholder">🏞️</span>
+              </div>
+              <div class="img-upload-controls">
+                <input type="file" id="bannerFile" accept="image/*" onchange="handleImageUpload('banner', this)" style="display:none;" />
+                <button class="btn-outline sm" type="button" onclick="document.getElementById('bannerFile').click()">📁 Escolher Banner</button>
+                <button class="btn-outline sm" type="button" onclick="openCurrentImageCropper('banner')">✂️ Enquadrar</button>
+                <button class="btn-danger-outline sm" type="button" onclick="clearImage('banner')">✕ Remover</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cores -->
+        <div class="settings-card">
+          <div class="settings-card-head">
+            <h3 class="settings-card-title">🎨 Cores do Site</h3>
+            <button class="btn-outline sm" type="button" onclick="resetThemeColors()">↺ Restaurar padrão</button>
+          </div>
+
+          <div class="colors-groups">
+            <div class="color-group">
+              <h4 class="color-group-title">Paleta Base</h4>
+              <p class="color-group-desc">Cores principais do tema geral.</p>
+              <div class="colors-grid">
+                <div class="color-field">
+                  <label>Cor Principal</label>
+                  <div class="color-input-wrap">
+                    <input type="color" id="cfgColorPrimary" value="#C0392B" />
+                    <input type="text" id="cfgColorPrimaryText" value="#C0392B" maxlength="7" oninput="syncColorText('Primary')" />
+                  </div>
+                </div>
+                <div class="color-field">
+                  <label>Cor Secundária</label>
+                  <div class="color-input-wrap">
+                    <input type="color" id="cfgColorSecondary" value="#E67E22" />
+                    <input type="text" id="cfgColorSecondaryText" value="#E67E22" maxlength="7" oninput="syncColorText('Secondary')" />
+                  </div>
+                </div>
+                <div class="color-field">
+                  <label>Cor de Fundo</label>
+                  <div class="color-input-wrap">
+                    <input type="color" id="cfgColorBg" value="#FDF6EC" />
+                    <input type="text" id="cfgColorBgText" value="#FDF6EC" maxlength="7" oninput="syncColorText('Bg')" />
+                  </div>
+                </div>
+                <div class="color-field">
+                  <label>Cor do Texto</label>
+                  <div class="color-input-wrap">
+                    <input type="color" id="cfgColorText" value="#1A1A1A" />
+                    <input type="text" id="cfgColorTextText" value="#1A1A1A" maxlength="7" oninput="syncColorText('Text')" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="color-group">
+              <h4 class="color-group-title">Superfícies e Contraste</h4>
+              <p class="color-group-desc">Controle fino para cards claros e áreas escuras (rodapé/hero).</p>
+              <div class="colors-grid">
+                <div class="color-field">
+                  <label>Cor de Superfície</label>
+                  <div class="color-input-wrap">
+                    <input type="color" id="cfgColorSurface" value="#FFFFFF" />
+                    <input type="text" id="cfgColorSurfaceText" value="#FFFFFF" maxlength="7" oninput="syncColorText('Surface')" />
+                  </div>
+                </div>
+                <div class="color-field">
+                  <label>Fundo Escuro</label>
+                  <div class="color-input-wrap">
+                    <input type="color" id="cfgColorSurfaceDark" value="#4B1912" />
+                    <input type="text" id="cfgColorSurfaceDarkText" value="#4B1912" maxlength="7" oninput="syncColorText('SurfaceDark')" />
+                  </div>
+                </div>
+                <div class="color-field">
+                  <label>Texto em Fundo Escuro</label>
+                  <div class="color-input-wrap">
+                    <input type="color" id="cfgColorOnDark" value="#FFFFFF" />
+                    <input type="text" id="cfgColorOnDarkText" value="#FFFFFF" maxlength="7" oninput="syncColorText('OnDark')" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="color-group">
+              <h4 class="color-group-title">Ações</h4>
+              <p class="color-group-desc">Cores para botões específicos.</p>
+              <div class="colors-grid">
+                <div class="color-field">
+                  <label>Botão WhatsApp</label>
+                  <div class="color-input-wrap">
+                    <input type="color" id="cfgColorWhatsapp" value="#25D366" />
+                    <input type="text" id="cfgColorWhatsappText" value="#25D366" maxlength="7" oninput="syncColorText('Whatsapp')" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="color-preview-bar" id="colorPreviewBar">
+            <span style="background:#C0392B; color:#fff;">Primária</span>
+            <span style="background:#E67E22; color:#fff;">Secundária</span>
+            <span style="background:#FDF6EC; color:#1A1A1A; border:1px solid #ddd;">Fundo</span>
+            <span style="background:#1A1A1A; color:#fff;">Texto</span>
+            <span style="background:#FFFFFF; color:#1A1A1A; border:1px solid #ddd;">Superfície</span>
+            <span style="background:#4B1912; color:#FFFFFF;">Fundo Escuro</span>
+            <span style="background:#FFFFFF; color:#1A1A1A; border:1px solid #ddd;">Texto Escuro</span>
+            <span style="background:#25D366; color:#1A1A1A;">WhatsApp</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════ PÁGINA: VISUAL DO SITE ══════════════════ -->
+    <section class="page" id="page-visual">
+      <div class="page-header">
+        <h2>Visual do Site</h2>
+        <button class="btn-primary" onclick="saveVisualSettings()">💾 Salvar Alterações</button>
+      </div>
+
+      <div class="settings-grid">
+        <!-- Textos da Home -->
+        <div class="settings-card full">
+          <h3 class="settings-card-title">🏠 Textos da Home</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Título Principal (Linha 1)</label>
+              <input type="text" id="vHeroTitle1" />
+            </div>
+            <div class="form-group">
+              <label>Título Principal (Linha 2 – destaque)</label>
+              <input type="text" id="vHeroTitle2" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Subtítulo / Descrição da Home</label>
+            <textarea id="vHeroSubtitle" rows="2"></textarea>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Badge da Home (ex: 🔥 Mais Pedidos)</label>
+              <input type="text" id="vHeroBadge" />
+            </div>
+            <div class="form-group">
+              <label>Texto do botão CTA</label>
+              <input type="text" id="vHeroCta" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Imagem flutuante do Hero -->
+        <div class="settings-card">
+          <h3 class="settings-card-title">🍕 Imagem Flutuante (Hero)</h3>
+          <div class="form-group">
+            <label>Foto da pizza flutuante (opcional)</label>
+            <div class="image-upload-area">
+              <div class="img-preview-wrap hero-float" id="vHeroFloatPreview">
+                <span class="img-placeholder">🍕</span>
+              </div>
+              <div class="img-upload-controls">
+                <input type="hidden" id="vHeroFloatingImage" />
+                <input type="file" id="vHeroFloatFile" accept="image/png,image/webp,image/*" onchange="handleVisualHeroImage(this)" style="display:none;" />
+                <button class="btn-outline sm" type="button" onclick="document.getElementById('vHeroFloatFile').click()">📁 Escolher Imagem</button>
+                <button class="btn-danger-outline sm" type="button" onclick="clearVisualHeroImage()">✕ Remover</button>
+              </div>
+            </div>
+            <small>Dica: PNG sem fundo fica melhor. Sem foto, o emoji padrão volta automático.</small>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Nome no Card Flutuante</label>
+              <input type="text" id="vHeroFloatingName" placeholder="Pizza Margherita" />
+            </div>
+            <div class="form-group">
+              <label>Valor no Card Flutuante</label>
+              <input type="text" id="vHeroFloatingPrice" placeholder="R$ 52,90" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Banner Promocional -->
+        <div class="settings-card full">
+          <h3 class="settings-card-title">📢 Banner Promocional (Topo)</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Texto do Banner</label>
+              <input type="text" id="vPromoBannerText" />
+            </div>
+            <div class="form-group sm">
+              <label>Ativo?</label>
+              <label class="toggle-switch">
+                <input type="checkbox" id="vPromoBannerActive" />
+                <span class="toggle-track"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Info de entrega na Home -->
+        <div class="settings-card">
+          <h3 class="settings-card-title">🚚 Informações de Entrega (Home)</h3>
+          <div class="form-group">
+            <label>Tempo de Entrega</label>
+            <input type="text" id="vDeliveryTime" placeholder="30–45 min" />
+          </div>
+          <div class="form-group">
+            <label>Avaliação</label>
+            <input type="text" id="vRating" placeholder="⭐ 4.9/5" />
+          </div>
+          <div class="form-group">
+            <label>Info Entrega Grátis</label>
+            <input type="text" id="vFreeDelivery" placeholder="Entrega grátis +R$60" />
+          </div>
+        </div>
+
+        <!-- Seções do site -->
+        <div class="settings-card">
+          <h3 class="settings-card-title">📋 Seções do Site</h3>
+          <div class="sections-toggle-list">
+            <div class="stl-item">
+              <span>Banner Promocional</span>
+              <label class="toggle-switch sm"><input type="checkbox" id="secPromoBanner" checked /><span class="toggle-track"></span></label>
+            </div>
+            <div class="stl-item">
+              <span>Seção Hero</span>
+              <label class="toggle-switch sm"><input type="checkbox" id="secHero" checked /><span class="toggle-track"></span></label>
+            </div>
+            <div class="stl-item">
+              <span>Seção de Combos</span>
+              <label class="toggle-switch sm"><input type="checkbox" id="secCombos" checked /><span class="toggle-track"></span></label>
+            </div>
+            <div class="stl-item">
+              <span>Seção Pizzas</span>
+              <label class="toggle-switch sm"><input type="checkbox" id="secPizzas" checked /><span class="toggle-track"></span></label>
+            </div>
+            <div class="stl-item">
+              <span>Seção Hambúrgueres</span>
+              <label class="toggle-switch sm"><input type="checkbox" id="secHamb" checked /><span class="toggle-track"></span></label>
+            </div>
+            <div class="stl-item">
+              <span>Seção Porções</span>
+              <label class="toggle-switch sm"><input type="checkbox" id="secPorcoes" checked /><span class="toggle-track"></span></label>
+            </div>
+            <div class="stl-item">
+              <span>Seção Bebidas</span>
+              <label class="toggle-switch sm"><input type="checkbox" id="secBebidas" checked /><span class="toggle-track"></span></label>
+            </div>
+            <div class="stl-item">
+              <span>Seção Sobremesas</span>
+              <label class="toggle-switch sm"><input type="checkbox" id="secSobremesas" checked /><span class="toggle-track"></span></label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════ PÁGINA: PEDIDOS ══════════════════ -->
+    <section class="page" id="page-orders">
+      <div class="page-header">
+        <h2>Configurações de Pedidos</h2>
+        <button class="btn-primary" onclick="saveOrderSettings()">💾 Salvar Alterações</button>
+      </div>
+
+      <div class="settings-grid">
+        <!-- WhatsApp -->
+        <div class="settings-card">
+          <h3 class="settings-card-title">💬 WhatsApp & Pedidos</h3>
+          <div class="form-group">
+            <label>Número do WhatsApp (recebe pedidos)</label>
+            <input type="text" id="orderWhatsapp" placeholder="5511+55 (XX) XXXXX-XXXX" />
+            <small>Formato: código país + DDD + número (sem espaços ou símbolos)</small>
+          </div>
+          <div class="form-group">
+            <label>Chave Pix (mostrada ao cliente)</label>
+            <input type="text" id="orderPixKey" placeholder="Ex: email@empresa.com ou CPF/CNPJ" />
+            <small>Essa chave aparece no checkout quando o cliente escolhe Pix.</small>
+          </div>
+          <div class="form-group">
+            <label>Mensagem Automática de Saudação</label>
+            <textarea id="orderGreeting" rows="3"></textarea>
+          </div>
+          <div class="form-group">
+            <label>Mensagem Automática de Pedido (template)</label>
+            <textarea id="orderMsgTemplate" rows="5"></textarea>
+            <small>Use {nome}, {itens}, {total} como variáveis</small>
+            <small>Regra da pizza meio a meio: o valor cobrado no cliente é sempre o do sabor de maior preço.</small>
+          </div>
+        </div>
+
+        <!-- Taxas e Limites -->
+        <div class="settings-card">
+          <h3 class="settings-card-title">💰 Taxas e Limites</h3>
+          <div class="form-group">
+            <label>Taxa de Entrega (R$)</label>
+            <input type="number" id="orderDeliveryFee" min="0" step="0.50" />
+          </div>
+          <div class="form-group">
+            <label>Valor para Entrega Grátis (R$)</label>
+            <input type="number" id="orderFreeDeliveryAt" min="0" step="5" />
+          </div>
+          <div class="form-group">
+            <label>Pedido Mínimo (R$)</label>
+            <input type="number" id="orderMinValue" min="0" step="1" />
+          </div>
+          <div class="form-group">
+            <label>Tempo Estimado de Entrega</label>
+            <input type="text" id="orderDeliveryTime" placeholder="30–45 min" />
+          </div>
+        </div>
+
+        <!-- Bairros atendidos -->
+        <div class="settings-card">
+          <h3 class="settings-card-title">📍 Bairros Atendidos</h3>
+          <div class="form-group">
+            <label>Adicionar Bairro</label>
+            <div class="tag-input-wrap">
+              <input type="text" id="newNeighborhood" placeholder="Nome do bairro..." onkeydown="if(event.key==='Enter'){addNeighborhood();event.preventDefault();}" />
+              <button class="btn-outline sm" onclick="addNeighborhood()">+ Adicionar</button>
+            </div>
+            <div class="tags-list" id="neighborhoodTags"></div>
+          </div>
+        </div>
+
+        <!-- Status da loja -->
+        <div class="settings-card">
+          <h3 class="settings-card-title">🟢 Status da Loja</h3>
+          <div class="form-group">
+            <label>Loja está aberta?</label>
+            <label class="toggle-switch">
+              <input type="checkbox" id="orderStoreOpen" onchange="toggleStoreStatus(this.checked)" />
+              <span class="toggle-track"></span>
+            </label>
+          </div>
+          <div class="form-group">
+            <label>Aviso quando loja fechada</label>
+            <textarea id="orderClosedMsg" rows="2" placeholder="Estamos fechados no momento. Volte em breve!"></textarea>
+          </div>
+          <div class="form-group">
+            <label>Aceitar pedidos por horário</label>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Abertura</label>
+                <input type="time" id="orderOpenTime" value="11:00" />
+              </div>
+              <div class="form-group">
+                <label>Fechamento</label>
+                <input type="time" id="orderCloseTime" value="23:00" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════ PÁGINA: EQUIPE DO SALÃO ══════════════════ -->
+    <section class="page" id="page-team">
+      <div class="page-header team-page-header">
+        <div>
+          <h2>Equipe do Salão</h2>
+          <p>Crie acessos individuais e acompanhe as ações feitas nas mesas.</p>
+        </div>
+        <button class="btn-outline" type="button" onclick="window.open('/garcom/', '_blank')">Abrir área do garçom</button>
+      </div>
+
+      <div class="team-security-note" role="note">
+        Cada funcionário deve usar seu próprio usuário e senha ou PIN. O acesso do garçom não libera o Admin, o Caixa nem a área Fiscal.
+      </div>
+
+      <div class="settings-grid team-settings-grid">
+        <form class="settings-card" id="teamUserForm" onsubmit="saveWaiterUserFromAdmin(event)">
+          <div class="settings-card-head">
+            <h3 class="settings-card-title" id="teamFormTitle">Novo funcionário</h3>
+            <button class="btn-link" id="teamCancelEditButton" type="button" onclick="resetWaiterUserForm()" hidden>Cancelar edição</button>
+          </div>
+          <input id="teamUserId" type="hidden" />
+          <div class="form-group">
+            <label for="teamDisplayName">Nome exibido</label>
+            <input id="teamDisplayName" type="text" maxlength="80" autocomplete="name" placeholder="Ex.: Carlos" required />
+          </div>
+          <div class="form-group">
+            <label for="teamUsername">Usuário</label>
+            <input id="teamUsername" type="text" minlength="3" maxlength="40" autocomplete="off" pattern="[a-z0-9._-]{3,40}" placeholder="Ex.: carlos" required />
+            <small>Use letras minúsculas, números, ponto, traço ou sublinhado.</small>
+          </div>
+          <div class="form-group">
+            <label for="teamRole">Função</label>
+            <select id="teamRole" required>
+              <option value="waiter">Garçom</option>
+              <option value="manager">Gerente do salão</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="teamPassword">Senha ou PIN <span id="teamPasswordOptional" hidden>(deixe vazio para manter)</span></label>
+            <input id="teamPassword" type="password" minlength="4" maxlength="128" autocomplete="new-password" inputmode="text" required />
+          </div>
+          <label class="team-active-control" id="teamActiveControl" hidden>
+            <input id="teamActive" type="checkbox" checked />
+            <span>Funcionário ativo</span>
+          </label>
+          <p class="form-error" id="teamFormError" role="alert"></p>
+          <button class="btn-primary" id="teamSaveButton" type="submit">Criar acesso</button>
+        </form>
+
+        <div class="settings-card full team-list-card">
+          <div class="settings-card-head">
+            <div>
+              <h3 class="settings-card-title">Funcionários cadastrados</h3>
+              <small id="teamUsersSummary">Carregando...</small>
+            </div>
+            <button class="btn-outline sm" type="button" onclick="loadWaiterUsersAdmin(true)">Atualizar</button>
+          </div>
+          <div class="team-users-list" id="teamUsersList" aria-live="polite"></div>
+        </div>
+
+        <div class="settings-card full team-audit-card">
+          <div class="settings-card-head">
+            <div>
+              <h3 class="settings-card-title">Atividade recente do salão</h3>
+              <small>Aberturas, pedidos, retiradas, reimpressões, transferências e fechamentos.</small>
+            </div>
+            <button class="btn-outline sm" type="button" onclick="loadWaiterAuditAdmin(true)">Atualizar</button>
+          </div>
+          <div class="team-audit-list" id="teamAuditList" aria-live="polite"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════ PÁGINA: CAIXA ══════════════════ -->
+    <section class="page" id="page-cashier">
+      <div class="page-header">
+        <div>
+          <h2>Caixa</h2>
+          <p>Recebimentos, movimentos e notas pre-validadas dos pedidos.</p>
+        </div>
+        <div class="order-logs-toolbar">
+          <button class="btn-outline" type="button" onclick="loadCashier()">Atualizar</button>
+          <button class="btn-primary" type="button" onclick="navigate('sefaz')">Configurar SEFAZ</button>
+        </div>
+      </div>
+
+      <div class="dash-cards cashier-summary-cards">
+        <div class="dash-card green">
+          <div class="dc-icon">💵</div>
+          <div class="dc-info">
+            <div class="dc-number" id="cashierStatusText">Fechado</div>
+            <div class="dc-label">Status do Caixa</div>
+          </div>
+        </div>
+        <div class="dash-card blue">
+          <div class="dc-icon">=</div>
+          <div class="dc-info">
+            <div class="dc-number" id="cashierExpectedAmount">R$ 0,00</div>
+            <div class="dc-label">Saldo Esperado</div>
+          </div>
+        </div>
+        <div class="dash-card orange">
+          <div class="dc-icon">R$</div>
+          <div class="dc-info">
+            <div class="dc-number" id="cashierTodaySales">R$ 0,00</div>
+            <div class="dc-label">Vendas Hoje</div>
+          </div>
+        </div>
+        <div class="dash-card red">
+          <div class="dc-icon">NF</div>
+          <div class="dc-info">
+            <div class="dc-number" id="cashierFiscalDocsCount">0</div>
+            <div class="dc-label">Notas locais</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cashier-layout">
+        <div class="settings-card">
+          <div class="settings-card-head">
+            <h3 class="settings-card-title">Operacao do Caixa</h3>
+            <span class="badge inactive" id="cashierStatusBadge">Fechado</span>
+          </div>
+          <div id="cashierSessionPanel"></div>
+        </div>
+
+        <div class="settings-card">
+          <h3 class="settings-card-title">Movimento Manual</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Tipo</label>
+              <select id="cashierMovementType">
+                <option value="supply">Suprimento</option>
+                <option value="withdrawal">Sangria</option>
+                <option value="adjustment">Ajuste</option>
+                <option value="refund">Estorno</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Pagamento</label>
+              <select id="cashierMovementPayment">
+                <option value="dinheiro">Dinheiro</option>
+                <option value="pix">Pix</option>
+                <option value="cartao_debito">Cartao debito</option>
+                <option value="cartao_credito">Cartao credito</option>
+                <option value="voucher">Voucher</option>
+                <option value="outro">Outro</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Valor</label>
+              <input type="number" id="cashierMovementAmount" min="0" step="0.01" placeholder="0.00" />
+            </div>
+            <div class="form-group">
+              <label>Descricao</label>
+              <input type="text" id="cashierMovementDescription" placeholder="Ex: retirada para troco" />
+            </div>
+          </div>
+          <button class="btn-outline" type="button" id="cashierMovementBtn" onclick="createCashMovementFromForm()" disabled>
+            Registrar Movimento
+          </button>
+        </div>
+      </div>
+
+      <div class="settings-card full cashier-section-card">
+        <div class="settings-card-head">
+          <h3 class="settings-card-title">Status SEFAZ e Emissao</h3>
+          <div class="cashier-fiscal-actions">
+            <button class="btn-outline sm" type="button" onclick="refreshSefazStatus()">Atualizar status</button>
+            <button class="btn-primary sm" type="button" onclick="navigate('sefaz')">Configurar SEFAZ</button>
+          </div>
+        </div>
+        <div class="sefaz-readonly-panel" id="cashierSefazStatus">
+          <div class="empty-state-sm">Status SEFAZ nao carregado.</div>
+        </div>
+      </div>
+
+      <div class="settings-card full cashier-section-card">
+        <div class="settings-card-head cashier-orders-card-head">
+          <div class="cashier-orders-title">
+            <h3 class="settings-card-title">Pedidos no Caixa</h3>
+            <span class="cashier-orders-count" id="cashierOrdersCount">0 pedidos</span>
+          </div>
+          <div class="cashier-orders-toolbar">
+            <label class="cashier-orders-date-filter" for="cashierOrdersDateFrom">
+              <span>De</span>
+              <input type="date" id="cashierOrdersDateFrom" onchange="setCashierOrdersDateFilter()" />
+            </label>
+            <label class="cashier-orders-date-filter" for="cashierOrdersDateTo">
+              <span>Ate</span>
+              <input type="date" id="cashierOrdersDateTo" onchange="setCashierOrdersDateFilter()" />
+            </label>
+            <button class="btn-outline sm" type="button" onclick="showCashierOrdersToday()">Hoje</button>
+            <button class="btn-outline sm" type="button" onclick="clearCashierOrdersDateFilter()">Todos</button>
+            <button class="btn-outline sm" type="button" onclick="refreshCashierOrders()">Atualizar</button>
+            <button class="btn-primary sm" type="button" id="cashierEmitNfe55Btn" onclick="openEmitirNota55Modal()" title="Emitir NF-e modelo 55 com dados completos do destinatário">Emitir Nota 55</button>
+          </div>
+        </div>
+        <div class="table-container cashier-orders-scroll" id="cashierOrdersScroll">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Pedido</th>
+                <th>Data</th>
+                <th>Cliente</th>
+                <th>Pagamento</th>
+                <th>Total</th>
+                <th>Caixa</th>
+                <th>Fiscal</th>
+                <th>Acoes</th>
+              </tr>
+            </thead>
+            <tbody id="cashierOrdersTableBody"></tbody>
+          </table>
+          <div class="table-empty" id="cashierOrdersEmpty" style="display:none;">
+            <div class="empty-icon">🧾</div>
+            <p id="cashierOrdersEmptyText">Nenhum pedido para mostrar.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="cashier-layout">
+        <div class="settings-card">
+          <h3 class="settings-card-title">Movimentos Recentes</h3>
+          <div class="table-container compact">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Data</th>
+                  <th>Tipo</th>
+                  <th>Pagamento</th>
+                  <th>Valor</th>
+                  <th>Descricao</th>
+                </tr>
+              </thead>
+              <tbody id="cashierMovementsTableBody"></tbody>
+            </table>
+            <div class="table-empty" id="cashierMovementsEmpty" style="display:none;">
+              <p>Nenhum movimento neste caixa.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="settings-card">
+          <h3 class="settings-card-title">Documentos Fiscais</h3>
+          <div class="table-container compact">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Tipo</th>
+                  <th>Ambiente</th>
+                  <th>Status</th>
+                  <th>Total</th>
+                  <th>Acoes</th>
+                </tr>
+              </thead>
+              <tbody id="cashierFiscalDocsTableBody"></tbody>
+            </table>
+            <div class="table-empty" id="cashierFiscalDocsEmpty" style="display:none;">
+              <p>Nenhuma nota pre-validada criada.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-card full cashier-section-card">
+        <div class="settings-card-head">
+          <h3 class="settings-card-title">Historico de Caixas Fechados</h3>
+          <button class="btn-outline sm" type="button" onclick="loadCashier()">Buscar</button>
+        </div>
+        <div class="cashier-history-filters">
+          <div class="form-group">
+            <label>De</label>
+            <input type="date" id="cashierHistoryDateFrom" />
+          </div>
+          <div class="form-group">
+            <label>Ate</label>
+            <input type="date" id="cashierHistoryDateTo" />
+          </div>
+          <div class="form-group">
+            <label>Operador</label>
+            <input type="text" id="cashierHistoryOperator" placeholder="Nome do operador" />
+          </div>
+        </div>
+        <div class="table-container compact">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Caixa</th>
+                <th>Operador</th>
+                <th>Abertura</th>
+                <th>Fechamento</th>
+                <th>Vendas</th>
+                <th>Estornos</th>
+                <th>Pagamentos</th>
+                <th>Diferenca</th>
+                <th>Acoes</th>
+              </tr>
+            </thead>
+            <tbody id="cashierHistoryTableBody"></tbody>
+          </table>
+          <div class="table-empty" id="cashierHistoryEmpty" style="display:none;">
+            <p>Nenhum fechamento encontrado.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-card full cashier-section-card">
+        <div class="settings-card-head">
+          <h3 class="settings-card-title">Eventos Fiscais Recentes</h3>
+        </div>
+        <div class="table-container compact">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Data</th>
+                <th>Evento</th>
+                <th>Serie</th>
+                <th>Numero/Chave</th>
+                <th>Status</th>
+                <th>Motivo</th>
+              </tr>
+            </thead>
+            <tbody id="cashierFiscalEventsTableBody"></tbody>
+          </table>
+          <div class="table-empty" id="cashierFiscalEventsEmpty" style="display:none;">
+            <p>Nenhum evento fiscal registrado.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════ PÁGINA: SEFAZ ══════════════════ -->
+    <section class="page" id="page-sefaz">
+      <div class="page-header">
+        <div>
+          <h2>Configuracao SEFAZ</h2>
+          <p>Dados fiscais, certificado, CSC e monitoramento de emissao.</p>
+        </div>
+        <div class="order-logs-toolbar">
+          <button class="btn-outline" type="button" onclick="refreshSefazStatus()">Verificar agora</button>
+          <button class="btn-primary" type="button" onclick="saveFiscalSettings()">Salvar SEFAZ</button>
+        </div>
+      </div>
+
+      <div class="settings-card full cashier-section-card">
+        <div class="settings-card-head">
+          <h3 class="settings-card-title">Status SEFAZ</h3>
+          <button class="btn-outline sm" type="button" onclick="refreshSefazStatus()">Atualizar</button>
+        </div>
+        <div class="sefaz-status-grid" id="sefazStatusPanel">
+          <div class="empty-state-sm">Status SEFAZ nao carregado.</div>
+        </div>
+      </div>
+
+      <div class="settings-card full cashier-section-card">
+        <div class="settings-card-head">
+          <h3 class="settings-card-title">Configuracoes Fiscais NFe/NFCe</h3>
+          <div class="cashier-fiscal-actions">
+            <button class="btn-outline sm" type="button" onclick="testFiscalConnection()">Testar configuracao</button>
+            <button class="btn-primary sm" type="button" onclick="saveFiscalSettings()">Salvar</button>
+          </div>
+        </div>
+
+        <div class="cashier-fiscal-grid">
+          <div>
+            <h4 class="cashier-fiscal-block-title">Empresa e documento</h4>
+            <div class="form-row checkboxes">
+              <label class="check-label">
+                <input type="checkbox" id="fiscalEnabled" />
+                <span>Fiscal ativo</span>
+              </label>
+              <label class="check-label">
+                <input type="checkbox" id="fiscalTransmitEnabled" />
+                <span>Liberar envio SEFAZ</span>
+              </label>
+              <label class="check-label">
+                <input type="checkbox" id="fiscalOfflinePreValidation" />
+                <span>Pre-validar sem SEFAZ</span>
+              </label>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Documento</label>
+                <select id="fiscalDocumentType">
+                  <option value="nfce">NFC-e consumidor</option>
+                  <option value="nfe">NF-e modelo 55</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Ambiente</label>
+                <select id="fiscalEnvironment" onchange="handleFiscalEnvironmentChange()">
+                  <option value="homologacao">Homologacao</option>
+                  <option value="producao">Producao</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>URL de monitoramento SEFAZ</label>
+              <input type="url" id="fiscalSefazStatusUrl" placeholder="Opcional: URL de consulta/status da SEFAZ" />
+              <small>Se ficar vazio, o sistema usa a URL padrao conhecida para a UF/ambiente.</small>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>UF</label>
+                <input type="text" id="fiscalUf" maxlength="2" />
+              </div>
+              <div class="form-group">
+                <label>CRT</label>
+                <select id="fiscalCrt">
+                  <option value="1">1 - Simples Nacional</option>
+                  <option value="2">2 - Simples excesso sublimite</option>
+                  <option value="3">3 - Regime normal</option>
+                  <option value="4">4 - MEI</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>CNPJ</label>
+              <input type="text" id="fiscalCnpj" maxlength="18" placeholder="Somente numeros" />
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Inscricao Estadual</label>
+                <input type="text" id="fiscalIe" />
+              </div>
+              <div class="form-group">
+                <label>Inscricao Municipal</label>
+                <input type="text" id="fiscalIm" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Razao Social</label>
+                <input type="text" id="fiscalCorporateName" />
+              </div>
+              <div class="form-group">
+                <label>Nome Fantasia</label>
+                <input type="text" id="fiscalTradeName" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Codigo Municipio IBGE</label>
+                <input type="text" id="fiscalCityCode" />
+              </div>
+              <div class="form-group">
+                <label>CNAE</label>
+                <input type="text" id="fiscalCnae" />
+              </div>
+            </div>
+            <h4 class="cashier-fiscal-block-title">Endereco fiscal</h4>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Logradouro</label>
+                <input type="text" id="fiscalAddressStreet" />
+              </div>
+              <div class="form-group sm">
+                <label>Numero</label>
+                <input type="text" id="fiscalAddressNumber" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Bairro</label>
+              <input type="text" id="fiscalAddressNeighborhood" />
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Cidade</label>
+                <input type="text" id="fiscalAddressCity" />
+              </div>
+              <div class="form-group sm">
+                <label>UF</label>
+                <input type="text" id="fiscalAddressUf" maxlength="2" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>CEP</label>
+                <input type="text" id="fiscalAddressCep" maxlength="9" />
+              </div>
+              <div class="form-group">
+                <label>Telefone</label>
+                <input type="text" id="fiscalAddressPhone" />
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h4 class="cashier-fiscal-block-title">Numeracao e impostos</h4>
+            <div class="form-group">
+              <label>Natureza da Operacao</label>
+              <input type="text" id="fiscalNatureOperation" />
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Serie NFC-e</label>
+                <input type="text" id="fiscalSeriesNfce" />
+              </div>
+              <div class="form-group">
+                <label>Proximo numero NFC-e</label>
+                <input type="number" id="fiscalNextNumberNfce" min="1" step="1" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Serie NF-e</label>
+                <input type="text" id="fiscalSeriesNfe" />
+              </div>
+              <div class="form-group">
+                <label>Proximo numero NF-e</label>
+                <input type="number" id="fiscalNextNumberNfe" min="1" step="1" />
+              </div>
+            </div>
+            <div class="form-row checkboxes">
+              <label class="check-label">
+                <input type="checkbox" id="fiscalProductionNumberingConfirmed" />
+                <span>Confirmo que a serie e o proximo numero de producao foram conferidos na SEFAZ/contador</span>
+              </label>
+            </div>
+            <small>A numeracao de homologacao e separada da producao. Sem esta confirmacao, o envio em producao fica bloqueado.</small>
+            <div class="form-row">
+              <div class="form-group">
+                <label>ID CSC NFC-e</label>
+                <input type="text" id="fiscalCscId" />
+              </div>
+              <div class="form-group">
+                <label>CSC NFC-e</label>
+                <input type="password" id="fiscalCsc" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>CFOP padrao</label>
+                <input type="text" id="fiscalDefaultCfop" maxlength="4" />
+              </div>
+              <div class="form-group">
+                <label>NCM padrao fallback</label>
+                <input type="text" id="fiscalDefaultNcm" maxlength="8" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>CEST padrao</label>
+                <input type="text" id="fiscalDefaultCest" maxlength="7" />
+              </div>
+              <div class="form-group">
+                <label>CSOSN/CST padrao</label>
+                <input type="text" id="fiscalDefaultCsosn" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Origem</label>
+                <input type="text" id="fiscalDefaultOrigin" maxlength="1" />
+              </div>
+              <div class="form-group">
+                <label>Unidade</label>
+                <input type="text" id="fiscalDefaultUnit" maxlength="6" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Aliquota ICMS padrao (%)</label>
+              <input type="number" id="fiscalDefaultAliquotaIcms" min="0" step="0.01" />
+            </div>
+            <h4 class="cashier-fiscal-block-title">Taxa de entrega na NFC-e</h4>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Codigo fiscal</label>
+                <input type="text" id="fiscalDeliveryCode" maxlength="60" />
+              </div>
+              <div class="form-group">
+                <label>Descricao fiscal</label>
+                <input type="text" id="fiscalDeliveryName" maxlength="120" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>NCM</label>
+                <input type="text" id="fiscalDeliveryNcm" maxlength="8" placeholder="Vazio usa o padrao" />
+              </div>
+              <div class="form-group">
+                <label>CFOP</label>
+                <input type="text" id="fiscalDeliveryCfop" maxlength="4" placeholder="Vazio usa o padrao" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>CSOSN</label>
+                <input type="text" id="fiscalDeliveryCsosn" maxlength="4" placeholder="Vazio usa o padrao" />
+              </div>
+              <div class="form-group">
+                <label>CST</label>
+                <input type="text" id="fiscalDeliveryCst" maxlength="4" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>CEST</label>
+                <input type="text" id="fiscalDeliveryCest" maxlength="7" />
+              </div>
+              <div class="form-group">
+                <label>Origem</label>
+                <input type="text" id="fiscalDeliveryOrigin" maxlength="1" placeholder="Vazio usa o padrao" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Unidade</label>
+                <input type="text" id="fiscalDeliveryUnit" maxlength="6" />
+              </div>
+              <div class="form-group">
+                <label>Aliquota ICMS (%)</label>
+                <input type="number" id="fiscalDeliveryAliquotaIcms" min="0" step="0.01" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>PIS CST</label>
+                <input type="text" id="fiscalDeliveryPisCst" maxlength="2" />
+              </div>
+              <div class="form-group">
+                <label>COFINS CST</label>
+                <input type="text" id="fiscalDeliveryCofinsCst" maxlength="2" />
+              </div>
+            </div>
+            <div class="form-row checkboxes">
+              <label class="check-label">
+                <input type="checkbox" id="fiscalDeliveryReviewRequired" />
+                <span>Taxa de entrega pendente de validacao fiscal; bloquear em producao</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="cashier-fiscal-status" id="cashierFiscalStatus"></div>
+        </div>
+      </div>
+
+      <div class="settings-card full cashier-section-card cashier-certificate-card">
+        <div class="settings-card-head">
+          <h3 class="settings-card-title">Certificado Digital</h3>
+          <div class="cashier-fiscal-actions">
+            <button class="btn-outline sm" type="button" onclick="testFiscalConnection()">Testar</button>
+            <button class="btn-primary sm" type="button" onclick="saveFiscalSettings()">Salvar certificado</button>
+          </div>
+        </div>
+        <div class="cashier-certificate-grid">
+          <div class="form-group">
+            <label>Caminho do certificado</label>
+            <input type="text" id="fiscalCertificatePath" placeholder="Ex: C:\\certificados\\empresa.pfx" />
+            <small>Informe o caminho do arquivo A1 (.pfx) ou o identificador usado no computador emissor.</small>
+          </div>
+          <div class="form-group">
+            <label>Senha do certificado</label>
+            <input type="password" id="fiscalCertificatePassword" />
+            <small>A senha é criptografada no servidor e nunca é devolvida ao navegador.</small>
+          </div>
+        </div>
+        <p class="cashier-certificate-note">
+          Esta tela fica separada do caixa para evitar alteracoes acidentais durante a operacao.
+        </p>
+      </div>
+
+      <div class="settings-card full cashier-section-card">
+        <div class="settings-card-head">
+          <h3 class="settings-card-title">Permissoes do Operador</h3>
+          <button class="btn-primary sm" type="button" onclick="saveFiscalSettings()">Salvar permissoes</button>
+        </div>
+        <div class="cashier-certificate-grid">
+          <div>
+            <div class="form-row checkboxes">
+              <label class="check-label">
+                <input type="checkbox" id="fiscalOperatorLockEnabled" />
+                <span>Ativar bloqueio por PIN no caixa</span>
+              </label>
+              <label class="check-label">
+                <input type="checkbox" id="fiscalRequireManagerRefund" />
+                <span>Exigir gerente para estorno</span>
+              </label>
+              <label class="check-label">
+                <input type="checkbox" id="fiscalRequireManagerClose" />
+                <span>Exigir gerente para fechar caixa</span>
+              </label>
+            </div>
+            <div class="form-row checkboxes">
+              <label class="check-label">
+                <input type="checkbox" id="fiscalRequireManagerFiscalConfig" />
+                <span>Exigir gerente para mudar SEFAZ</span>
+              </label>
+              <label class="check-label">
+                <input type="checkbox" id="fiscalRequireManagerFiscalTransmit" />
+                <span>Exigir gerente para enviar nota</span>
+              </label>
+              <label class="check-label">
+                <input type="checkbox" id="fiscalRequireManagerFiscalEvents" />
+                <span>Exigir gerente para eventos fiscais</span>
+              </label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>PIN do gerente</label>
+            <input type="password" id="fiscalManagerPin" autocomplete="off" inputmode="numeric" minlength="4" maxlength="12" pattern="[0-9]{4,12}" />
+            <small>O PIN é salvo como hash e nunca é devolvido ao navegador.</small>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>PIN para salvar alteracoes protegidas</label>
+          <input type="password" id="fiscalManagerActionPin" autocomplete="off" inputmode="numeric" minlength="4" maxlength="12" pattern="[0-9]{4,12}" />
+        </div>
+      </div>
+
+      <div class="settings-card full cashier-section-card">
+        <div class="settings-card-head">
+          <h3 class="settings-card-title">Contingencia e Eventos Fiscais</h3>
+          <div class="cashier-fiscal-actions">
+            <button class="btn-outline sm" type="button" onclick="applyFiscalContingency()">Aplicar contingencia</button>
+            <button class="btn-primary sm" type="button" onclick="createFiscalInutilization()">Registrar inutilizacao</button>
+          </div>
+        </div>
+        <div class="cashier-fiscal-grid">
+          <div>
+            <h4 class="cashier-fiscal-block-title">Contingencia NFC-e</h4>
+            <div class="form-row checkboxes">
+              <label class="check-label">
+                <input type="checkbox" id="fiscalContingencyEnabled" />
+                <span>Ativar contingencia local</span>
+              </label>
+            </div>
+            <div class="form-group">
+              <label>Modo</label>
+              <select id="fiscalContingencyMode">
+                <option value="offline">Offline NFC-e</option>
+                <option value="prevalidation">Pre-validacao local</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Motivo da contingencia</label>
+              <input type="text" id="fiscalContingencyReason" placeholder="Ex: internet indisponivel" />
+            </div>
+          </div>
+          <div>
+            <h4 class="cashier-fiscal-block-title">Inutilizacao de numeracao</h4>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Serie</label>
+                <input type="text" id="fiscalInutilizationSeries" placeholder="1" />
+              </div>
+              <div class="form-group">
+                <label>Numero inicial</label>
+                <input type="number" id="fiscalInutilizationStart" min="1" step="1" />
+              </div>
+              <div class="form-group">
+                <label>Numero final</label>
+                <input type="number" id="fiscalInutilizationEnd" min="1" step="1" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Justificativa</label>
+              <input type="text" id="fiscalInutilizationReason" placeholder="Minimo 15 caracteres" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════ PÁGINA: PEDIDOS REGISTRADOS ══════════════════ -->
+    <section class="page" id="page-order-logs">
+      <div class="page-header">
+        <div>
+          <h2>Pedidos Registrados</h2>
+          <p>Historico de pedidos enviados pelo site</p>
+        </div>
+        <div class="order-logs-toolbar">
+          <label class="order-logs-filter" for="orderLogsDateFilter">
+            <span>Data</span>
+            <input type="date" id="orderLogsDateFilter" onchange="setOrderLogsFilter(this.value)" />
+          </label>
+          <button class="btn-outline" type="button" onclick="loadOrderLogs()">Atualizar</button>
+        </div>
+      </div>
+
+      <div class="order-logs-auto-print" id="orderLogsAutoPrint">
+        <div class="olap-head">
+          <h3>Agente de Impressao Automatica</h3>
+          <span class="olap-status disconnected" id="printAgentStatus">Verificando</span>
+        </div>
+        <p class="olap-text">
+          Baixe o instalador .exe no Windows da impressora, execute uma vez e clique em Start. As comandas novas passam a imprimir sozinhas em segundo plano.
+        </p>
+        <div class="olap-server">
+          <span>Servidor</span>
+          <code id="printAgentServerUrl">--</code>
+          <button class="btn-outline sm" type="button" onclick="copyPrintAgentServerUrl()">Copiar</button>
+        </div>
+        <div class="olap-stats" id="printAgentStats">
+          <div class="olap-stat"><span>Pendentes</span><strong>0</strong></div>
+          <div class="olap-stat"><span>Imprimindo</span><strong>0</strong></div>
+          <div class="olap-stat"><span>Concluidas</span><strong>0</strong></div>
+          <div class="olap-stat"><span>Falhas</span><strong>0</strong></div>
+        </div>
+        <div class="olap-actions">
+          <button class="btn-primary sm" type="button" id="printAgentInstallerBtn" onclick="downloadPrintAgentInstaller()" disabled>
+            Baixar app Windows
+          </button>
+          <button class="btn-outline sm" type="button" onclick="loadPrintAgentStatus()">
+            Atualizar agente
+          </button>
+          <button class="btn-outline sm" type="button" id="autoPrintConnectBtn" onclick="toggleAutoPrinterConnection()">
+            Abrir impressao manual
+          </button>
+          <button class="btn-outline sm" type="button" onclick="printAutoPrinterTestPage()">
+            Teste manual
+          </button>
+          <label class="olap-profile" for="autoPrintProfile">
+            <span>Formato de impressao</span>
+            <select id="autoPrintProfile" onchange="setAutoPrintProfile(this.value)">
+              <option value="thermal80">Termica 80mm</option>
+              <option value="thermal58">Termica 58mm</option>
+              <option value="a4">Papel A4</option>
+            </select>
+          </label>
+        </div>
+        <div class="olap-credentials" aria-labelledby="printAgentCredentialsTitle">
+          <div class="olap-credentials-head">
+            <div>
+              <strong id="printAgentCredentialsTitle">Computadores autorizados</strong>
+              <span>Credenciais individuais; tokens nunca são exibidos.</span>
+            </div>
+            <span class="olap-legacy-status" id="printAgentLegacyStatus">Verificando modo legado</span>
+          </div>
+          <div class="olap-credentials-list" id="printAgentCredentialsList" role="list" aria-live="polite">
+            <p class="olap-credentials-empty">Carregando credenciais...</p>
+          </div>
+        </div>
+        <small class="olap-note" id="printAgentNote">Verificando configuracao do agente no servidor.</small>
+      </div>
+
+      <div class="table-container">
+        <table class="data-table" id="orderLogsTable">
+          <thead>
+            <tr>
+              <th>Codigo</th>
+              <th>Data</th>
+              <th>Cliente</th>
+              <th>Status / Tipo</th>
+              <th>Total</th>
+              <th>Pagamento</th>
+              <th>Acoes</th>
+            </tr>
+          </thead>
+          <tbody id="orderLogsTableBody"></tbody>
+        </table>
+        <div class="order-logs-mobile-list" id="orderLogsMobileList"></div>
+        <div class="table-empty" id="orderLogsEmpty">
+          <div class="empty-icon">🧾</div>
+          <p id="orderLogsEmptyText">Nenhum pedido registrado ainda</p>
+        </div>
+      </div>
+    </section>
+
+  </main><!-- /main-content -->
+</div><!-- /admin-app -->
+
+<!-- ═══════════════════════ MODAL GENÉRICO ═══════════════════════ -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal()"></div>
+
+<!-- Modal: perfil do administrador -->
+<form class="modal sm" id="adminProfileModal" onsubmit="saveAdminProfile(event)" autocomplete="off" role="dialog" aria-modal="true" aria-labelledby="adminProfileModalTitle" aria-describedby="adminProfileSecurityNote">
+  <div class="modal-header">
+    <h3 id="adminProfileModalTitle">Meu perfil</h3>
+    <button class="modal-close" type="button" onclick="closeModal()" aria-label="Fechar perfil">✕</button>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <label for="adminDisplayName">Nome exibido no painel</label>
+      <input type="text" id="adminDisplayName" minlength="2" maxlength="60" autocomplete="name" required />
+    </div>
+    <div class="form-group">
+      <label for="adminCurrentPassword">Senha atual</label>
+      <input type="password" id="adminCurrentPassword" maxlength="128" autocomplete="current-password" aria-describedby="adminCurrentPasswordHelp" required />
+      <small id="adminCurrentPasswordHelp">Obrigatória para confirmar qualquer alteração.</small>
+    </div>
+    <div class="form-group">
+      <label for="adminNewPassword">Nova senha (opcional)</label>
+      <input type="password" id="adminNewPassword" minlength="8" maxlength="128" autocomplete="new-password" aria-describedby="adminNewPasswordHelp" />
+      <small id="adminNewPasswordHelp">Use pelo menos 8 caracteres. Deixe em branco para manter a senha.</small>
+    </div>
+    <div class="form-group">
+      <label for="adminConfirmPassword">Confirmar nova senha</label>
+      <input type="password" id="adminConfirmPassword" minlength="8" maxlength="128" autocomplete="new-password" />
+    </div>
+    <p class="admin-profile-error" id="adminProfileError" role="alert" aria-live="polite"></p>
+    <p class="admin-profile-security-note" id="adminProfileSecurityNote">A senha atual não é salva. Ao trocar a senha, as outras sessões administrativas são encerradas.</p>
+  </div>
+  <div class="modal-footer">
+    <button class="btn-outline" type="button" onclick="closeModal()">Cancelar</button>
+    <button class="btn-primary" id="saveAdminProfileButton" type="submit">Salvar alterações</button>
+  </div>
+</form>
+
+<!-- Modal: Anúncio -->
+<div class="modal" id="announcementModal">
+  <div class="modal-header">
+    <h3 id="announcementModalTitle">Novo Anúncio</h3>
+    <button class="modal-close" onclick="closeModal()">✕</button>
+  </div>
+  <div class="modal-body">
+    <input type="hidden" id="announcementId" />
+    <div class="modal-two-col">
+      <div class="modal-col">
+        <div class="form-group">
+          <label>Título do Anúncio</label>
+          <input type="text" id="anTitle" placeholder="Ex: Promoção do dia" />
+        </div>
+        <div class="form-group">
+          <label>Texto curto</label>
+          <textarea id="anDescription" rows="4" placeholder="Mensagem que aparece junto com a foto..."></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Validade inicial</label>
+            <input type="date" id="anStartDate" />
+          </div>
+          <div class="form-group">
+            <label>Validade final</label>
+            <input type="date" id="anEndDate" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Texto do botão</label>
+            <input type="text" id="anButtonLabel" placeholder="Ex: Ver ofertas" />
+          </div>
+          <div class="form-group">
+            <label>Link do botão</label>
+            <input type="text" id="anButtonUrl" placeholder="https://... ou #instalar-app" />
+            <small>Use #instalar-app para abrir a instalação do aplicativo.</small>
+          </div>
+        </div>
+        <div class="form-row checkboxes">
+          <label class="check-label">
+            <input type="checkbox" id="anActive" checked />
+            <span>✅ Anúncio Ativo</span>
+          </label>
+        </div>
+      </div>
+      <div class="modal-col">
+        <div class="form-group">
+          <label>Foto do anúncio *</label>
+          <div class="image-upload-area">
+            <div class="img-preview-wrap announcement" id="anImagePreview">
+              <span class="img-placeholder">📢</span>
+            </div>
+            <div class="img-upload-controls">
+              <input type="file" id="anImageFile" accept="image/*" onchange="handleAnnouncementImage(this)" style="display:none;" />
+              <button class="btn-outline sm" type="button" onclick="document.getElementById('anImageFile').click()">📁 Escolher Foto</button>
+              <button class="btn-outline sm" type="button" onclick="openCurrentImageCropper('announcement')">✂️ Enquadrar</button>
+              <button class="btn-danger-outline sm" type="button" onclick="clearAnnouncementImage()">✕ Remover</button>
+            </div>
+          </div>
+          <input type="hidden" id="anImage" />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn-outline" onclick="closeModal()">Cancelar</button>
+    <button class="btn-primary" onclick="saveAnnouncement()">💾 Salvar Anúncio</button>
+  </div>
+</div>
+
+<!-- Modal: Produto -->
+<div class="modal" id="productModal">
+  <div class="modal-header">
+    <h3 id="productModalTitle">Novo Produto</h3>
+    <button class="modal-close" onclick="closeModal()">✕</button>
+  </div>
+  <div class="modal-body">
+    <input type="hidden" id="productId" />
+    <div class="modal-two-col">
+      <!-- Coluna esquerda -->
+      <div class="modal-col">
+        <div class="form-group">
+          <label>Nome do Produto *</label>
+          <input type="text" id="pName" placeholder="Ex: Pizza Margherita" required />
+        </div>
+        <div class="form-group">
+          <label>Categoria *</label>
+          <select id="pCategory"></select>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Preço (R$) *</label>
+            <input type="number" id="pPrice" min="0" step="0.10" placeholder="0.00" required />
+          </div>
+          <div class="form-group">
+            <label>Preço Promocional (R$)</label>
+            <input type="number" id="pOldPrice" min="0" step="0.10" placeholder="0.00" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Emoji do Produto</label>
+          <div class="emoji-picker-wrap">
+            <input type="text" id="pEmoji" maxlength="4" placeholder="🍕" />
+            <div class="emoji-quick">
+              <span onclick="setEmoji('🍕')">🍕</span><span onclick="setEmoji('🍔')">🍔</span>
+              <span onclick="setEmoji('🍟')">🍟</span><span onclick="setEmoji('🥤')">🥤</span>
+              <span onclick="setEmoji('🧀')">🧀</span><span onclick="setEmoji('🍗')">🍗</span>
+              <span onclick="setEmoji('🥗')">🥗</span><span onclick="setEmoji('🍫')">🍫</span>
+              <span onclick="setEmoji('🍰')">🍰</span><span onclick="setEmoji('🍮')">🍮</span>
+              <span onclick="setEmoji('🎂')">🎂</span><span onclick="setEmoji('🧅')">🧅</span>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Badge</label>
+          <select id="pBadge">
+            <option value="">Sem badge</option>
+            <option value="Mais Pedido">Mais Pedido</option>
+            <option value="Novo">Novo</option>
+            <option value="Promoção">Promoção</option>
+            <option value="Exclusivo">Exclusivo</option>
+          </select>
+        </div>
+        <div class="form-row checkboxes">
+          <label class="check-label">
+            <input type="checkbox" id="pFeatured" />
+            <span>⭐ Destaque</span>
+          </label>
+          <label class="check-label">
+            <input type="checkbox" id="pActive" checked />
+            <span>✅ Ativo</span>
+          </label>
+          <label class="check-label">
+            <input type="checkbox" id="pTrackStock" />
+            <span>📦 Controlar estoque</span>
+          </label>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Estoque minimo</label><input type="number" id="pMinimumStock" min="0" step="0.001" value="0" /></div>
+          <div class="form-group"><label>Unidade do estoque</label><input type="text" id="pStockUnit" maxlength="12" value="UN" /></div>
+        </div>
+      </div>
+      <!-- Coluna direita -->
+      <div class="modal-col">
+        <div class="form-group">
+          <label>Descrição</label>
+          <textarea id="pDescription" rows="3" placeholder="Descreva o produto..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Ingredientes</label>
+          <textarea id="pIngredients" rows="3" placeholder="Liste os ingredientes..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Tamanho / Porção</label>
+          <input type="text" id="pSize" placeholder="Ex: Grande (35cm), 400g..." />
+        </div>
+        <div class="form-group">
+          <label>Observações</label>
+          <input type="text" id="pObservations" placeholder="Ex: Contém glúten, Vegano..." />
+        </div>
+        <div class="product-fiscal-box">
+          <h4>Fiscal</h4>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Codigo fiscal</label>
+              <input type="text" id="pFiscalCode" maxlength="60" placeholder="Ex: AGUA-500ML" />
+            </div>
+            <div class="form-group">
+              <label>GTIN/EAN</label>
+              <input type="text" id="pBarcode" maxlength="14" placeholder="Sem codigo para pizza" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Nome fiscal no XML</label>
+            <input type="text" id="pFiscalName" maxlength="120" placeholder="Use vazio para repetir o nome do cardapio" />
+          </div>
+          <div class="form-row">
+            <div class="form-group ncm-picker-group">
+              <label>NCM</label>
+              <div class="ncm-picker-wrap">
+                <input type="text" id="pNcm" maxlength="8" placeholder="21069090" autocomplete="off" onfocus="openNcmPicker()" oninput="handleNcmInputChange()" />
+                <button type="button" class="btn-outline sm" onclick="toggleNcmPicker()">Buscar</button>
+              </div>
+              <small id="pNcmHint">Clique para buscar no catalogo.</small>
+              <div class="ncm-picker-panel" id="ncmPickerPanel">
+                <div class="ncm-picker-search">
+                  <input type="text" id="ncmSearchInput" placeholder="Pesquisar codigo, agua, refri, pizza..." oninput="renderNcmCatalogResults()" />
+                </div>
+                <div class="ncm-results" id="ncmResults"></div>
+                <div class="ncm-custom-box">
+                  <strong>Cadastrar NCM</strong>
+                  <div class="ncm-custom-grid">
+                    <input type="text" id="ncmCustomCode" maxlength="8" placeholder="Codigo NCM" />
+                    <input type="text" id="ncmCustomTitle" maxlength="120" placeholder="Descricao / produto" />
+                  </div>
+                  <input type="text" id="ncmCustomExamples" maxlength="180" placeholder="Exemplos: agua 500ml, refri lata..." />
+                  <button type="button" class="btn-outline sm" onclick="saveCustomNcmEntry()">Salvar no catalogo</button>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>CEST</label>
+              <input type="text" id="pCest" maxlength="7" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>CFOP</label>
+              <input type="text" id="pCfop" maxlength="4" placeholder="5102" />
+            </div>
+            <div class="form-group">
+              <label>CSOSN/CST</label>
+              <input type="text" id="pCsosn" placeholder="102" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Origem</label>
+              <input type="text" id="pOrigin" maxlength="1" value="0" />
+            </div>
+            <div class="form-group">
+              <label>Unidade</label>
+              <input type="text" id="pUnit" maxlength="6" value="UN" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Unid. tributavel</label>
+              <input type="text" id="pTribUnit" maxlength="6" placeholder="UN" />
+            </div>
+            <div class="form-group">
+              <label>Fator trib.</label>
+              <input type="number" id="pTribFactor" min="0.0001" step="0.0001" placeholder="1" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Aliquota ICMS (%)</label>
+            <input type="number" id="pAliquotaIcms" min="0" step="0.01" value="0" />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>PIS CST</label>
+              <input type="text" id="pPisCst" maxlength="2" placeholder="49" />
+            </div>
+            <div class="form-group">
+              <label>PIS (%)</label>
+              <input type="number" id="pPisAliquota" min="0" step="0.01" value="0" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>COFINS CST</label>
+              <input type="text" id="pCofinsCst" maxlength="2" placeholder="49" />
+            </div>
+            <div class="form-group">
+              <label>COFINS (%)</label>
+              <input type="number" id="pCofinsAliquota" min="0" step="0.01" value="0" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Cod. beneficio fiscal</label>
+            <input type="text" id="pBenefitCode" maxlength="10" />
+          </div>
+          <div class="form-row checkboxes">
+            <label class="check-label">
+              <input type="checkbox" id="pFiscalReviewRequired" />
+              <span>Perfil provisorio: bloquear emissao em producao ate validacao do contador</span>
+            </label>
+          </div>
+          <div class="form-group">
+            <label>Fonte do perfil fiscal</label>
+            <input type="text" id="pFiscalProfileSource" maxlength="240" placeholder="Ex.: XML autorizado / validacao do contador" />
+          </div>
+          <div class="form-group">
+            <label>Observacao fiscal interna</label>
+            <textarea id="pFiscalProfileNote" maxlength="1000" rows="2"></textarea>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Imagem do Produto</label>
+          <div class="image-upload-area sm">
+            <div class="img-preview-wrap" id="pImagePreview">
+              <span class="img-placeholder" id="pImageEmoji">🍕</span>
+            </div>
+            <div class="img-upload-controls">
+              <input type="file" id="pImageFile" accept="image/*" onchange="handleProductImage(this)" style="display:none;" />
+              <button class="btn-outline sm" type="button" onclick="document.getElementById('pImageFile').click()">📁 Escolher Imagem</button>
+              <button class="btn-danger-outline sm" type="button" onclick="clearProductImage()">✕ Remover</button>
+            </div>
+          </div>
+          <input type="hidden" id="pImage" />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn-outline" onclick="closeModal()">Cancelar</button>
+    <button class="btn-primary" onclick="saveProduct()">💾 Salvar Produto</button>
+  </div>
+</div>
+
+<!-- Modal: Categoria -->
+<div class="modal sm" id="categoryModal">
+  <div class="modal-header">
+    <h3 id="categoryModalTitle">Nova Categoria</h3>
+    <button class="modal-close" onclick="closeModal()">✕</button>
+  </div>
+  <div class="modal-body">
+    <input type="hidden" id="categoryId" />
+    <div class="form-group">
+      <label>Nome da Categoria *</label>
+      <input type="text" id="cName" placeholder="Ex: Pizzas" required />
+    </div>
+    <div class="form-group">
+      <label>Descricao da Categoria</label>
+      <textarea id="cDescription" rows="3" placeholder="Ex: Massa artesanal, forno a lenha, ingredientes frescos"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Ícone (Emoji)</label>
+      <div class="emoji-picker-wrap">
+        <input type="text" id="cIcon" maxlength="4" placeholder="🍕" />
+        <div class="emoji-quick">
+          <span onclick="setCatEmoji('🍕')">🍕</span><span onclick="setCatEmoji('🍔')">🍔</span>
+          <span onclick="setCatEmoji('🍟')">🍟</span><span onclick="setCatEmoji('🥤')">🥤</span>
+          <span onclick="setCatEmoji('🧀')">🧀</span><span onclick="setCatEmoji('🍰')">🍰</span>
+          <span onclick="setCatEmoji('⭐')">⭐</span><span onclick="setCatEmoji('🥗')">🥗</span>
+          <span onclick="setCatEmoji('📂')">📂</span><span onclick="setCatEmoji('🍗')">🍗</span>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Cor de Destaque</label>
+      <div class="color-input-wrap">
+        <input type="color" id="cColor" value="#C0392B" />
+        <input type="text" id="cColorText" value="#C0392B" maxlength="7" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Ordem de Exibição</label>
+      <input type="number" id="cOrder" min="1" value="1" />
+    </div>
+    <div class="form-row checkboxes">
+      <label class="check-label">
+        <input type="checkbox" id="cActive" checked />
+        <span>✅ Categoria Ativa</span>
+      </label>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn-outline" onclick="closeModal()">Cancelar</button>
+    <button class="btn-primary" onclick="saveCategory()">💾 Salvar Categoria</button>
+  </div>
+</div>
+
+<!-- Modal: Combo -->
+<div class="modal" id="comboModal">
+  <div class="modal-header">
+    <h3 id="comboModalTitle">Novo Combo</h3>
+    <button class="modal-close" onclick="closeModal()">✕</button>
+  </div>
+  <div class="modal-body">
+    <input type="hidden" id="comboId" />
+    <div class="modal-two-col">
+      <div class="modal-col">
+        <div class="form-group">
+          <label>Nome do Combo *</label>
+          <input type="text" id="cbName" placeholder="Ex: Combo Família" />
+        </div>
+        <div class="form-group">
+          <label>Emoji</label>
+          <input type="text" id="cbEmoji" maxlength="4" placeholder="👨‍👩‍👧‍👦" />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Preço do Combo (R$) *</label>
+            <input type="number" id="cbPrice" min="0" step="0.10" placeholder="0.00" />
+          </div>
+          <div class="form-group">
+            <label>Preço Original (R$)</label>
+            <input type="number" id="cbOldPrice" min="0" step="0.10" placeholder="0.00" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Tag Promocional</label>
+          <input type="text" id="cbBadge" placeholder="Ex: ECONOMIZE R$25" />
+        </div>
+        <div class="form-row checkboxes">
+          <label class="check-label">
+            <input type="checkbox" id="cbActive" checked />
+            <span>✅ Combo Ativo</span>
+          </label>
+        </div>
+      </div>
+      <div class="modal-col">
+        <div class="form-group">
+          <label>Descrição</label>
+          <textarea id="cbDescription" rows="3" placeholder="Descreva o combo..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Produtos do Combo</label>
+          <div class="combo-product-selector">
+            <div class="cps-search">
+              <input type="text" id="cbProductSearch" placeholder="Buscar produto..." oninput="filterComboProducts(this.value)" />
+            </div>
+            <div class="cps-list" id="comboProductList"></div>
+          </div>
+          <div class="form-group" style="margin-top:8px;">
+            <label>Itens selecionados:</label>
+            <div class="selected-combo-items" id="selectedComboItems">
+              <span class="empty-hint">Nenhum produto selecionado</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn-outline" onclick="closeModal()">Cancelar</button>
+    <button class="btn-primary" onclick="saveCombo()">💾 Salvar Combo</button>
+  </div>
+</div>
+
+<!-- Modal: Promoção -->
+<div class="modal" id="promotionModal">
+  <div class="modal-header">
+    <h3 id="promotionModalTitle">Nova Promoção</h3>
+    <button class="modal-close" onclick="closeModal()">✕</button>
+  </div>
+  <div class="modal-body">
+    <input type="hidden" id="promoId" />
+    <div class="modal-two-col">
+      <div class="modal-col">
+        <div class="form-group">
+          <label>Título da Promoção *</label>
+          <input type="text" id="prName" placeholder="Ex: Pizza em dobro!" />
+        </div>
+        <div class="form-group">
+          <label>Descrição</label>
+          <textarea id="prDescription" rows="3" placeholder="Descreva a promoção..."></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Preço Promocional (R$)</label>
+            <input type="number" id="prPrice" min="0" step="0.10" placeholder="0.00" />
+          </div>
+          <div class="form-group">
+            <label>Preço Original (R$)</label>
+            <input type="number" id="prOldPrice" min="0" step="0.10" placeholder="0.00" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Válido de</label>
+            <input type="date" id="prStartDate" />
+          </div>
+          <div class="form-group">
+            <label>Válido até</label>
+            <input type="date" id="prEndDate" />
+          </div>
+        </div>
+        <div class="form-row checkboxes">
+          <label class="check-label">
+            <input type="checkbox" id="prActive" checked />
+            <span>✅ Promoção Ativa</span>
+          </label>
+          <label class="check-label">
+            <input type="checkbox" id="prBanner" />
+            <span>📢 Mostrar como banner</span>
+          </label>
+        </div>
+      </div>
+      <div class="modal-col">
+        <div class="form-group">
+          <label>Imagem da Promoção</label>
+          <div class="image-upload-area sm">
+            <div class="img-preview-wrap" id="prImagePreview">
+              <span class="img-placeholder">🏷️</span>
+            </div>
+            <div class="img-upload-controls">
+              <input type="file" id="prImageFile" accept="image/*" onchange="handlePromoImage(this)" style="display:none;" />
+              <button class="btn-outline sm" type="button" onclick="document.getElementById('prImageFile').click()">📁 Imagem</button>
+              <button class="btn-danger-outline sm" type="button" onclick="clearPromoImage()">✕</button>
+            </div>
+          </div>
+          <input type="hidden" id="prImage" />
+        </div>
+        <div class="form-group">
+          <label>Produtos desta Promoção</label>
+          <div class="combo-product-selector">
+            <div class="cps-list" id="promoProductList" style="max-height:160px;"></div>
+          </div>
+          <div class="selected-combo-items" id="selectedPromoItems">
+            <span class="empty-hint">Nenhum produto selecionado</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn-outline" onclick="closeModal()">Cancelar</button>
+    <button class="btn-primary" onclick="savePromotion()">💾 Salvar Promoção</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════ MODAL DE RECORTE DE IMAGEM ═══════════════════════ -->
+<div class="crop-overlay" id="imageCropOverlay">
+  <div class="crop-modal" role="dialog" aria-modal="true" aria-labelledby="cropModalTitle">
+    <div class="crop-header">
+      <h3 id="cropModalTitle">Enquadrar Imagem</h3>
+      <button class="modal-close" type="button" onclick="closeImageCropper()">✕</button>
+    </div>
+    <div class="crop-body">
+      <p class="crop-hint" id="cropModalHint">Ajuste a imagem para enquadrar corretamente.</p>
+      <div class="crop-frame logo" id="cropFrame">
+        <img id="cropImage" alt="Pré-visualização da imagem para recorte" />
+        <div class="crop-mask"></div>
+      </div>
+      <div class="crop-controls">
+        <label for="cropZoomRange">Zoom</label>
+        <input type="range" id="cropZoomRange" min="100" max="320" step="1" value="100" oninput="updateCropZoom(this.value)" />
+        <span id="cropZoomLabel">100%</span>
+      </div>
+    </div>
+    <div class="crop-footer">
+      <button class="btn-outline" type="button" onclick="closeImageCropper()">Cancelar</button>
+      <button class="btn-primary" type="button" onclick="saveCroppedImage()">Aplicar Recorte</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ MODAL DE CONFIRMAÇÃO ═══════════════════════ -->
+<div class="confirm-overlay cashier-payment-overlay" id="cashierPaymentOverlay" onclick="handleCashierPaymentOverlayClick(event)">
+  <div class="cashier-payment-box" role="dialog" aria-modal="true" aria-labelledby="cashierPaymentTitle" aria-describedby="cashierPaymentMessage">
+    <h3 id="cashierPaymentTitle">Forma de pagamento</h3>
+    <p id="cashierPaymentMessage">Escolha como este pedido será recebido.</p>
+    <div class="cashier-payment-summary">
+      <span id="cashierPaymentOrderCode">Pedido</span>
+      <strong id="cashierPaymentAmount">R$ 0,00</strong>
+    </div>
+    <strong class="cashier-payment-options-title" id="cashierPaymentOptionsLabel">Forma de pagamento</strong>
+    <div class="cashier-payment-options" id="cashierPaymentOptions" role="radiogroup" aria-labelledby="cashierPaymentOptionsLabel">
+      <label class="cashier-payment-option">
+        <input type="radio" name="cashierPaymentMethod" value="pix" onchange="handleCashierPrimaryPaymentMethodChange()" />
+        <span>Pix</span>
+      </label>
+      <label class="cashier-payment-option">
+        <input type="radio" name="cashierPaymentMethod" value="dinheiro" onchange="handleCashierPrimaryPaymentMethodChange()" />
+        <span>Dinheiro</span>
+      </label>
+      <label class="cashier-payment-option">
+        <input type="radio" name="cashierPaymentMethod" value="cartao_debito" onchange="handleCashierPrimaryPaymentMethodChange()" />
+        <span>Debito</span>
+      </label>
+      <label class="cashier-payment-option">
+        <input type="radio" name="cashierPaymentMethod" value="cartao_credito" onchange="handleCashierPrimaryPaymentMethodChange()" />
+        <span>Credito</span>
+      </label>
+      <label class="cashier-payment-option">
+        <input type="radio" name="cashierPaymentMethod" value="voucher" onchange="handleCashierPrimaryPaymentMethodChange()" />
+        <span>Voucher</span>
+      </label>
+      <label class="cashier-payment-option">
+        <input type="radio" name="cashierPaymentMethod" value="outro" onchange="handleCashierPrimaryPaymentMethodChange()" />
+        <span>Outro</span>
+      </label>
+    </div>
+    <div class="cashier-split-payment" id="cashierSplitPaymentField" hidden>
+      <label class="cashier-split-toggle" for="cashierSplitPaymentEnabled">
+        <input type="checkbox" id="cashierSplitPaymentEnabled" onchange="toggleCashierSplitPayment()" />
+        <span>
+          <strong>Dividir em duas formas</strong>
+          <small>Informe o valor da primeira forma; o restante sera calculado automaticamente.</small>
+        </span>
+      </label>
+      <div class="cashier-split-details" id="cashierSplitPaymentDetails" hidden>
+        <div class="cashier-split-grid">
+          <label for="cashierFirstPaymentAmount">
+            <span>Valor na 1ª forma</span>
+            <input type="text" id="cashierFirstPaymentAmount" inputmode="decimal" autocomplete="off" maxlength="18" placeholder="0,00" aria-describedby="cashierSplitPaymentStatus" oninput="updateCashierSplitPaymentValues()" />
+          </label>
+          <label for="cashierSecondPaymentMethod">
+            <span>2ª forma</span>
+            <select id="cashierSecondPaymentMethod" onchange="updateCashierSplitPaymentValues()">
+              <option value="pix">Pix</option>
+              <option value="dinheiro">Dinheiro</option>
+              <option value="cartao_debito">Cartao debito</option>
+              <option value="cartao_credito">Cartao credito</option>
+              <option value="voucher">Voucher</option>
+              <option value="outro">Outro</option>
+            </select>
+          </label>
+          <div class="cashier-split-remaining" aria-label="Valor restante na segunda forma">
+            <span>Restante na 2ª forma</span>
+            <output id="cashierSecondPaymentAmount">R$ 0,00</output>
+          </div>
+        </div>
+        <small class="cashier-split-status" id="cashierSplitPaymentStatus" role="status" aria-live="polite"></small>
+      </div>
+    </div>
+    <div class="cashier-fiscal-operation" id="cashierFiscalOperationField" style="display:none;">
+      <strong>Operação fiscal da NFC-e</strong>
+      <div class="cashier-fiscal-operation-options">
+        <label>
+          <input type="radio" name="cashierFiscalOperation" value="entrega" onchange="handleCashierFiscalOperationChange()" />
+          <span>Entrega ao domicílio</span>
+        </label>
+        <label>
+          <input type="radio" name="cashierFiscalOperation" value="retirada" onchange="handleCashierFiscalOperationChange()" />
+          <span>Retirada</span>
+        </label>
+        <label>
+          <input type="radio" name="cashierFiscalOperation" value="consumo_local" onchange="handleCashierFiscalOperationChange()" />
+          <span>Consumo local</span>
+        </label>
+      </div>
+      <small>Escolha a situação que realmente aconteceu. Entrega exige CPF/CNPJ.</small>
+    </div>
+    <div class="form-group cashier-consumer-document" id="cashierConsumerDocumentField" style="display:none;">
+      <label for="cashierConsumerDocument" id="cashierConsumerDocumentLabel">CPF/CNPJ na NFC-e (opcional)</label>
+      <input type="text" id="cashierConsumerDocument" inputmode="numeric" maxlength="18" placeholder="CPF/CNPJ" />
+      <input type="text" id="cashierConsumerName" maxlength="60" placeholder="Nome / razao social" />
+      <input type="email" id="cashierConsumerEmail" maxlength="60" placeholder="E-mail" />
+      <input type="tel" id="cashierConsumerPhone" maxlength="20" placeholder="Telefone" />
+      <div class="cashier-consumer-address-grid">
+        <input type="text" id="cashierConsumerCep" inputmode="numeric" maxlength="9" placeholder="CEP" />
+        <input type="text" id="cashierConsumerStreet" maxlength="60" placeholder="Rua / avenida" />
+        <input type="text" id="cashierConsumerNumber" maxlength="60" placeholder="Numero" />
+        <input type="text" id="cashierConsumerComplement" maxlength="60" placeholder="Complemento" />
+        <input type="text" id="cashierConsumerNeighborhood" maxlength="60" placeholder="Bairro" />
+        <input type="text" id="cashierConsumerCity" maxlength="60" placeholder="Cidade" />
+        <input type="text" id="cashierConsumerUf" maxlength="2" placeholder="UF" />
+        <input type="text" id="cashierConsumerCityCode" inputmode="numeric" maxlength="7" placeholder="Codigo IBGE" />
+      </div>
+      <small id="cashierConsumerDocumentHint">Deixe tudo em branco para consumidor não identificado.</small>
+    </div>
+    <div class="confirm-actions">
+      <button class="btn-outline" type="button" onclick="cancelCashierPaymentSelection()">Cancelar</button>
+      <button class="btn-primary" type="button" id="cashierPaymentConfirmBtn" onclick="confirmCashierPaymentSelection()">Continuar</button>
+    </div>
+  </div>
+</div>
+
+<div class="confirm-overlay nfe55-overlay" id="nfe55Overlay" onclick="handleNfe55OverlayClick(event)" style="display:none;">
+  <div class="confirm-box nfe55-box" role="dialog" aria-modal="true" aria-labelledby="nfe55Title">
+    <div class="nfe55-header">
+      <div class="nfe55-header-title">
+        <h3 id="nfe55Title">Emitir Nota Fiscal Modelo 55 (NF-e)</h3>
+        <p>Emissão de NF-e completa com dados do destinatário para empresas e faturamento.</p>
+      </div>
+      <button class="modal-close" type="button" onclick="closeNfe55Modal()" aria-label="Fechar modal NF-e 55">✕</button>
+    </div>
+
+    <!-- Etapa 1: Seleção da Comanda / Pedido -->
+    <div class="nfe55-section">
+      <h4 class="nfe55-section-title">1. Comanda / Pedido</h4>
+      <div class="form-group">
+        <label for="nfe55OrderSelect">Escolha a comanda ou pedido:</label>
+        <select id="nfe55OrderSelect" onchange="handleNfe55OrderSelectionChange()"></select>
+      </div>
+      <div class="nfe55-order-preview" id="nfe55OrderPreview">
+        <div class="empty-state-sm">Nenhum pedido selecionado.</div>
+      </div>
+      <div class="nfe55-freight-box" id="nfe55FreightBox" style="margin-top:10px; padding:10px 14px; background:var(--bg-card, #f8fafc); border:1px solid var(--border, #e2e8f0); border-radius:6px;">
+        <label class="check-label" style="display:flex; align-items:center; gap:8px; cursor:pointer; font-weight:600; color:var(--text, #1e293b); font-size:0.88rem; user-select:none;">
+          <input type="checkbox" id="nfe55IncludeFreight" onchange="handleNfe55FreightToggle()" />
+          <span>🚚 Incluir frete / taxa de entrega na nota fiscal</span>
+        </label>
+        <div id="nfe55FreightFields" style="display:none; margin-top:8px; gap:12px; align-items:center;">
+          <div class="form-group" style="margin-bottom:0; max-width:170px;">
+            <label for="nfe55FreightAmount" style="font-size:0.75rem; color:var(--text-2, #64748b);">Valor do Frete (R$)</label>
+            <input type="number" id="nfe55FreightAmount" min="0" step="0.01" placeholder="0.00" oninput="handleNfe55FreightAmountChange()" style="font-weight:bold; font-size:0.95rem;" />
+          </div>
+          <span id="nfe55FreightHint" style="font-size:0.78rem; color:var(--text-2, #64748b); margin-top:14px;"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Etapa 2: Dados do Destinatário -->
+    <div class="nfe55-section">
+      <h4 class="nfe55-section-title">2. Destinatário (Exigido pela SEFAZ para NF-e)</h4>
+      <div class="nfe55-person-type-toggle">
+        <label class="nfe55-type-option">
+          <input type="radio" name="nfe55PersonType" value="PJ" checked onchange="handleNfe55PersonTypeChange()" />
+          <span>Pessoa Jurídica (CNPJ)</span>
+        </label>
+        <label class="nfe55-type-option">
+          <input type="radio" name="nfe55PersonType" value="PF" onchange="handleNfe55PersonTypeChange()" />
+          <span>Pessoa Física (CPF)</span>
+        </label>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="nfe55Doc" id="nfe55DocLabel">CNPJ do Destinatário *</label>
+          <input type="text" id="nfe55Doc" placeholder="00.000.000/0000-00" inputmode="numeric" maxlength="18" oninput="maskNfe55Doc(this)" />
+        </div>
+        <div class="form-group">
+          <label for="nfe55Name" id="nfe55NameLabel">Razão Social / Nome Completo *</label>
+          <input type="text" id="nfe55Name" placeholder="Razão Social da Empresa" maxlength="60" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="nfe55IndIEDest">Indicador da Inscrição Estadual</label>
+          <select id="nfe55IndIEDest" onchange="handleNfe55IndIEChange()">
+            <option value="9" selected>9 - Não Contribuinte (Padrão para consumo / reembolso)</option>
+            <option value="1">1 - Contribuinte ICMS (Exige IE informada)</option>
+            <option value="2">2 - Contribuinte Isento de Inscrição Estadual</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="nfe55Ie">Inscrição Estadual (IE)</label>
+          <input type="text" id="nfe55Ie" placeholder="Inscrição Estadual" maxlength="14" disabled />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="nfe55Email">E-mail para envio do XML e DANFE</label>
+          <input type="email" id="nfe55Email" placeholder="financeiro@empresa.com.br" maxlength="60" />
+        </div>
+        <div class="form-group">
+          <label for="nfe55Phone">Telefone / WhatsApp</label>
+          <input type="tel" id="nfe55Phone" placeholder="(00) 00000-0000" maxlength="20" oninput="maskNfe55Phone(this)" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Etapa 3: Endereço do Destinatário -->
+    <div class="nfe55-section">
+      <h4 class="nfe55-section-title">3. Endereço Completo do Destinatário</h4>
+      <div class="nfe55-cep-search-row">
+        <div class="form-group" style="flex:1;">
+          <label for="nfe55Cep">CEP *</label>
+          <div style="display:flex; gap:8px;">
+            <input type="text" id="nfe55Cep" placeholder="00000-000" maxlength="9" inputmode="numeric" oninput="maskNfe55Cep(this)" onblur="searchNfe55Cep(false)" />
+            <button type="button" class="btn-outline sm" id="nfe55CepSearchBtn" onclick="searchNfe55Cep(true)">Buscar CEP</button>
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group" style="flex:2;">
+          <label for="nfe55Street">Logradouro / Rua *</label>
+          <input type="text" id="nfe55Street" placeholder="Rua / Avenida" maxlength="60" />
+        </div>
+        <div class="form-group" style="flex:1;">
+          <label for="nfe55Number">Número *</label>
+          <input type="text" id="nfe55Number" placeholder="Número ou S/N" maxlength="20" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="nfe55Complement">Complemento</label>
+          <input type="text" id="nfe55Complement" placeholder="Sala, bloco, andar (opcional)" maxlength="60" />
+        </div>
+        <div class="form-group">
+          <label for="nfe55Neighborhood">Bairro *</label>
+          <input type="text" id="nfe55Neighborhood" placeholder="Bairro" maxlength="60" />
+        </div>
+      </div>
+      <div class="form-row nfe55-city-grid">
+        <div class="form-group">
+          <label for="nfe55City">Município *</label>
+          <input type="text" id="nfe55City" placeholder="Cidade" maxlength="60" />
+        </div>
+        <div class="form-group">
+          <label for="nfe55Uf">UF *</label>
+          <input type="text" id="nfe55Uf" placeholder="UF" maxlength="2" style="text-transform:uppercase;" />
+        </div>
+        <div class="form-group">
+          <label for="nfe55CityCode">Cód. IBGE (7 dígitos) *</label>
+          <input type="text" id="nfe55CityCode" placeholder="Ex: 5208707" maxlength="7" inputmode="numeric" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Etapa 4: Pagamento e Operação -->
+    <div class="nfe55-section">
+      <h4 class="nfe55-section-title">4. Pagamento e Operação</h4>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="nfe55PaymentMethod">Forma de Pagamento</label>
+          <select id="nfe55PaymentMethod">
+            <option value="pix">Pix</option>
+            <option value="cartao_credito">Cartão de Crédito</option>
+            <option value="cartao_debito">Cartão de Débito</option>
+            <option value="dinheiro">Dinheiro</option>
+            <option value="voucher">Voucher / Vale Refeição</option>
+            <option value="outro">Outro</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="nfe55FiscalOp">Operação Fiscal</label>
+          <select id="nfe55FiscalOp">
+            <option value="consumo_local">Consumo Local (Presencial)</option>
+            <option value="retirada">Retirada no Balcão</option>
+            <option value="entrega">Entrega</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="nfe55-actions confirm-actions">
+      <button class="btn-outline" type="button" onclick="closeNfe55Modal()">Cancelar</button>
+      <button class="btn-outline" type="button" id="nfe55DraftBtn" onclick="submitNfe55('draft')">Pré-validar Nota 55</button>
+      <button class="btn-primary" type="button" id="nfe55TransmitBtn" onclick="submitNfe55('transmit')">Emitir e Transmitir à SEFAZ</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal sm" id="stockMovementModal" role="dialog" aria-modal="true" aria-labelledby="stockMovementModalTitle">
+  <div class="modal-header"><h3 id="stockMovementModalTitle">Movimentar estoque</h3><button class="modal-close" type="button" onclick="closeModal()" aria-label="Fechar movimentação">✕</button></div>
+  <div class="modal-body">
+    <div class="form-group"><label for="stockProductId">Produto</label><select id="stockProductId"></select></div>
+    <div class="form-group"><label for="stockMovementType">Tipo</label><select id="stockMovementType" onchange="syncStockMovementForm()"><option value="entry">Entrada</option><option value="exit">Saída manual</option><option value="adjustment">Ajustar saldo para</option></select></div>
+    <div class="form-row"><div class="form-group"><label id="stockQuantityLabel" for="stockQuantity">Quantidade de entrada</label><input type="number" id="stockQuantity" min="0.001" step="0.001" inputmode="decimal" /></div><div class="form-group" id="stockCostField"><label for="stockUnitCost">Custo unitário</label><input type="number" id="stockUnitCost" min="0.01" step="0.01" inputmode="decimal" /></div></div>
+    <div class="form-group" id="stockSupplierField"><label for="stockSupplier">Fornecedor</label><input type="text" id="stockSupplier" maxlength="160" /></div>
+    <div class="form-group" id="stockInvoiceField"><label for="stockInvoiceNumber">Número da nota</label><input type="text" id="stockInvoiceNumber" maxlength="80" /></div>
+    <div class="form-group"><label id="stockNotesLabel" for="stockNotes">Observação (opcional)</label><textarea id="stockNotes" rows="3" maxlength="500"></textarea><small id="stockMovementHint">Informe o custo real da unidade adicionada.</small></div>
+    <p class="form-error" id="stockMovementError" role="alert"></p>
+  </div>
+  <div class="modal-footer"><button class="btn-outline" type="button" onclick="closeModal()">Cancelar</button><button class="btn-primary" id="saveStockMovementButton" type="button" onclick="saveStockMovement()">Salvar movimento</button></div>
+</div>
+
+<div class="modal lg" id="stockXmlModal" role="dialog" aria-modal="true" aria-labelledby="stockXmlModalTitle">
+  <div class="modal-header"><h3 id="stockXmlModalTitle">Conferir entrada pelo XML</h3><button class="modal-close" type="button" onclick="closeModal()" aria-label="Fechar conferência do XML">✕</button></div>
+  <div class="modal-body"><div id="stockXmlSummary" class="stock-xml-summary"></div><div id="stockXmlItems" class="stock-xml-items"></div></div>
+  <div class="modal-footer"><button class="btn-outline" type="button" onclick="closeModal()">Cancelar</button><button class="btn-primary" id="confirmStockXmlImportButton" type="button" onclick="confirmStockXmlImport()">Confirmar entrada</button></div>
+</div>
+
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-box">
+    <div class="confirm-icon" id="confirmIcon">⚠️</div>
+    <h3 id="confirmTitle">Confirmar ação</h3>
+    <p id="confirmMsg">Tem certeza que deseja excluir este item?</p>
+    <div class="confirm-fields" id="confirmFields" hidden></div>
+    <div class="confirm-actions">
+      <button class="btn-outline" id="confirmCancelBtn" onclick="closeConfirm()">Cancelar</button>
+      <button class="btn-danger" id="confirmBtn" onclick="confirmAction()">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ TOAST ═══════════════════════ -->
+<div class="admin-toast" id="adminToast" role="status" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="../lib/pizza-options.js"></script>
+  <script src="admin.js?v=20261016-frete"></script>
+</body>
+</html>

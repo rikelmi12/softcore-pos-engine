@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#c0392b">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Garçom — Morada da Pizza</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/garcom/garcom.css?v=20260812-system-audit">
+</head>
+<body>
+  <div class="app-shell">
+    <section class="login-screen" id="loginScreen" aria-labelledby="loginTitle">
+      <div class="login-brand" aria-hidden="true">
+        <span class="brand-mark">M</span>
+        <p>Morada da Pizza</p>
+      </div>
+      <form class="login-card" id="loginForm">
+        <p class="eyebrow">Área da equipe</p>
+        <h1 id="loginTitle">Acesso do garçom</h1>
+        <p class="login-copy">Use seu acesso individual para atender suas mesas com segurança.</p>
+        <label>
+          <span>Seu usuário</span>
+          <input id="loginUser" name="username" autocomplete="username" autocapitalize="none" spellcheck="false" required>
+        </label>
+        <label>
+          <span>Senha</span>
+          <input id="loginPassword" name="password" type="password" autocomplete="current-password" required>
+        </label>
+        <p class="form-error" id="loginError" role="alert"></p>
+        <button class="button button-primary button-large" type="submit">Entrar no salão</button>
+      </form>
+    </section>
+
+    <main class="waiter-app is-hidden" id="waiterApp">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Morada da Pizza</p>
+          <h1 id="pageTitle">Salão</h1>
+        </div>
+        <div class="topbar-actions">
+          <div class="actor-summary" id="actorSummary" aria-label="Usuário conectado">
+            <span class="actor-avatar" id="actorAvatar" aria-hidden="true">G</span>
+            <span class="actor-copy"><strong id="currentWaiterName">Garçom</strong><small id="currentWaiterRole">Equipe</small></span>
+          </div>
+          <button class="icon-button" id="refreshButton" type="button" aria-label="Atualizar dados" title="Atualizar">↻</button>
+          <button class="avatar-button" id="logoutButton" type="button" aria-label="Sair da área do garçom">Sair</button>
+        </div>
+      </header>
+
+      <div class="service-banner network-banner is-hidden" id="networkBanner" role="status" aria-live="polite">
+        <strong>Sem conexão</strong><span>Seus rascunhos estão salvos neste aparelho.</span>
+      </div>
+      <div class="service-banner printer-banner is-hidden" id="printerBanner" role="status" aria-live="polite">
+        <strong>Impressora indisponível</strong><span id="printerBannerText">Confira o agente de impressão no Caixa.</span>
+      </div>
+
+      <section class="dashboard-view" id="dashboardView">
+        <div class="status-strip" id="statusStrip" aria-label="Resumo do salão"></div>
+
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Mapa do salão</p>
+            <h2>Escolha uma mesa</h2>
+          </div>
+          <button class="button button-quiet" id="addTableButton" type="button">+ Mesa</button>
+        </div>
+
+        <label class="search-field">
+          <span aria-hidden="true">⌕</span>
+          <input id="tableSearch" type="search" placeholder="Buscar número ou cliente" aria-label="Buscar mesa por número ou cliente" autocomplete="off">
+        </label>
+
+        <div class="table-filters" id="tableFilters" role="toolbar" aria-label="Filtrar mesas">
+          <button class="table-filter active" type="button" data-table-filter="mine" aria-pressed="true"><span>Minhas</span><b data-filter-count="mine">0</b></button>
+          <button class="table-filter" type="button" data-table-filter="open" aria-pressed="false"><span>Abertas</span><b data-filter-count="open">0</b></button>
+          <button class="table-filter" type="button" data-table-filter="awaiting" aria-pressed="false"><span>Aguardando</span><b data-filter-count="awaiting">0</b></button>
+          <button class="table-filter" type="button" data-table-filter="free" aria-pressed="false"><span>Livres</span><b data-filter-count="free">0</b></button>
+        </div>
+
+        <div class="table-grid" id="tableGrid" aria-label="Mesas do salão" aria-busy="false"></div>
+
+        <section class="history-section">
+          <div class="section-heading compact">
+            <div>
+              <p class="eyebrow">Histórico recente</p>
+              <h2>Contas fechadas</h2>
+            </div>
+          </div>
+          <div class="history-list" id="historyList"></div>
+        </section>
+      </section>
+
+      <section class="tab-view is-hidden" id="tabView">
+        <button class="back-button" id="backButton" type="button">← Voltar ao salão</button>
+        <div class="tab-hero" id="tabHero"></div>
+
+        <div class="tab-layout">
+          <section class="order-panel">
+            <div class="section-heading compact">
+              <div>
+                <p class="eyebrow">Pedidos enviados</p>
+                <h2>Comanda da mesa</h2>
+              </div>
+            </div>
+            <div class="batch-list" id="batchList"></div>
+            <div class="account-actions" id="accountActions"></div>
+          </section>
+
+          <section class="catalog-panel" id="catalogPanel">
+            <div class="section-heading compact">
+              <div>
+                <p class="eyebrow">Novo pedido</p>
+                <h2>Adicionar à mesa</h2>
+              </div>
+            </div>
+            <label class="search-field catalog-search">
+              <span aria-hidden="true">⌕</span>
+              <input id="productSearch" type="search" placeholder="Buscar pizza, bebida..." aria-label="Buscar produto" autocomplete="off">
+            </label>
+            <div class="category-chips" id="categoryChips" role="toolbar" aria-label="Categorias do cardápio"></div>
+            <div class="product-grid" id="productGrid" aria-live="polite"></div>
+          </section>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <aside class="cart-bar is-hidden" id="cartBar" aria-live="polite">
+    <button class="cart-summary" id="cartToggle" type="button" aria-expanded="false" aria-controls="cartDrawer">
+      <span class="cart-count" id="cartCount">0</span>
+      <span><strong>Novo pedido</strong><small id="cartTotal">R$ 0,00</small></span>
+      <span aria-hidden="true">↑</span>
+    </button>
+  </aside>
+
+  <div class="drawer-backdrop is-hidden" id="drawerBackdrop"></div>
+  <aside class="cart-drawer is-hidden" id="cartDrawer" role="dialog" aria-modal="true" aria-labelledby="cartTitle" aria-hidden="true" tabindex="-1">
+    <div class="drawer-handle" aria-hidden="true"></div>
+    <div class="drawer-header">
+      <div>
+        <p class="eyebrow">Revisão</p>
+        <h2 id="cartTitle">Itens deste pedido</h2>
+      </div>
+      <button class="icon-button" id="closeCartButton" type="button" aria-label="Fechar pedido">×</button>
+    </div>
+    <div class="cart-items" id="cartItems"></div>
+    <label class="note-field">
+      <span>Observação para a cozinha</span>
+      <textarea id="orderNote" rows="2" maxlength="600" placeholder="Ex.: sem cebola, cortar em 8..."></textarea>
+    </label>
+    <div class="cart-footer">
+      <div class="cart-total-line"><span>Total deste envio</span><strong id="drawerTotal">R$ 0,00</strong></div>
+      <div class="send-actions">
+        <button class="button button-secondary" id="saveOrderButton" type="button">Salvar sem imprimir</button>
+        <button class="button button-primary" id="printOrderButton" type="button">Enviar e imprimir</button>
+      </div>
+    </div>
+  </aside>
+
+  <dialog class="modal" id="openTableDialog" aria-labelledby="openTableTitle">
+    <form id="openTableForm">
+      <div class="modal-heading">
+        <div>
+          <p class="eyebrow">Nova comanda</p>
+          <h2 id="openTableTitle">Abrir mesa</h2>
+        </div>
+        <button class="icon-button" id="closeOpenTableDialogButton" type="button" aria-label="Fechar">×</button>
+      </div>
+      <div class="assigned-actor" id="openTableActor"><span>Responsável</span><strong id="openTableActorName">Garçom</strong></div>
+      <label class="is-hidden" id="assignedWaiterField">
+        <span>Atribuir a</span>
+        <select id="assignedWaiter"></select>
+      </label>
+      <label>
+        <span>Cliente ou identificação <small>(opcional)</small></span>
+        <input id="customerName" maxlength="120" placeholder="Ex.: aniversário da Ana">
+      </label>
+      <label>
+        <span>Observação <small>(opcional)</small></span>
+        <textarea id="tableNotes" rows="2" maxlength="900" placeholder="Ex.: 6 pessoas, cadeira infantil"></textarea>
+      </label>
+      <p class="form-error" id="openTableError" role="alert"></p>
+      <button class="button button-primary button-large" id="confirmOpenTable" type="submit">Abrir comanda</button>
+    </form>
+  </dialog>
+
+  <dialog class="modal small" id="addTableDialog" aria-labelledby="addTableTitle">
+    <form id="addTableForm">
+      <div class="modal-heading">
+        <div><p class="eyebrow">Salão</p><h2 id="addTableTitle">Adicionar mesa</h2></div>
+        <button class="icon-button" id="closeAddTableDialogButton" type="button" aria-label="Fechar">×</button>
+      </div>
+      <label><span>Número da mesa</span><input id="newTableNumber" type="number" min="1" max="999" required></label>
+      <label><span>Apelido <small>(opcional)</small></span><input id="newTableLabel" maxlength="80" placeholder="Ex.: Varanda"></label>
+      <p class="form-error" id="addTableError" role="alert"></p>
+      <button class="button button-primary button-large" type="submit">Adicionar</button>
+    </form>
+  </dialog>
+
+  <dialog class="modal small" id="closeAccountDialog" aria-labelledby="closeAccountTitle">
+    <form id="closeAccountForm">
+      <div class="modal-heading">
+        <div><p class="eyebrow">Conferência final</p><h2 id="closeAccountTitle">Enviar conta ao Caixa</h2></div>
+        <button class="icon-button" id="closeAccountDialogButton" type="button" aria-label="Cancelar envio da conta">×</button>
+      </div>
+      <div class="account-confirm-summary" id="accountConfirmSummary">
+        <span>Mesa</span><strong id="closeAccountTable">--</strong>
+        <span>Cliente</span><strong id="closeAccountCustomer">--</strong>
+        <span>Itens</span><strong id="closeAccountItems">0</strong>
+        <span>Total</span><strong class="account-confirm-total" id="closeAccountTotal">R$ 0,00</strong>
+      </div>
+      <p class="modal-help">A mesa continuará ocupada como “Aguardando” até o Caixa registrar o pagamento.</p>
+      <p class="form-error" id="closeAccountError" role="alert"></p>
+      <div class="modal-actions safe-danger-actions">
+        <button class="button button-quiet" id="cancelCloseAccountButton" type="button">Revisar comanda</button>
+        <button class="button button-danger" id="confirmCloseAccountButton" type="submit">Enviar ao Caixa</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog class="modal small" id="reprintDialog" aria-labelledby="reprintDialogTitle" aria-describedby="reprintDialogCopy">
+    <form id="reprintForm">
+      <div class="modal-heading">
+        <div><p class="eyebrow">Segunda via</p><h2 id="reprintDialogTitle">Reimprimir pedido</h2></div>
+        <button class="icon-button" id="closeReprintDialogButton" type="button" aria-label="Cancelar reimpressão">×</button>
+      </div>
+      <p class="modal-help" id="reprintDialogCopy"></p>
+      <label><span>Motivo da reimpressão</span><textarea id="reprintReason" rows="3" minlength="3" maxlength="300" placeholder="Ex.: impressão não saiu na cozinha" required></textarea></label>
+      <p class="form-error" id="reprintError" role="alert"></p>
+      <button class="button button-primary button-large" type="submit">Confirmar segunda via</button>
+    </form>
+  </dialog>
+
+  <dialog class="modal" id="transferTableDialog" aria-labelledby="transferTableTitle">
+    <form id="transferTableForm">
+      <div class="modal-heading">
+        <div><p class="eyebrow">Organização do salão</p><h2 id="transferTableTitle">Organizar mesas</h2></div>
+        <button class="icon-button" id="closeTransferDialogButton" type="button" aria-label="Fechar organização de mesas">×</button>
+      </div>
+      <div class="transfer-current" id="transferCurrentSummary"></div>
+      <section class="linked-tables-section" aria-labelledby="linkedTablesTitle">
+        <h3 id="linkedTablesTitle">Mesas nesta comanda</h3>
+        <div class="linked-tables-list" id="linkedTablesList"></div>
+      </section>
+      <label><span>Juntar uma mesa livre</span><select id="linkTargetTable"><option value="">Escolha uma mesa livre</option></select></label>
+      <button class="button button-secondary button-large" id="linkTableButton" type="button">Juntar mesa à comanda</button>
+      <label><span>Mover a comanda <small>(opcional)</small></span><select id="transferTargetTable"><option value="">Manter mesa principal</option></select></label>
+      <label id="transferTargetWaiterField"><span>Novo responsável <small>(somente gerente)</small></span><select id="transferTargetWaiter"><option value="">Manter responsável atual</option></select></label>
+      <label><span>Motivo da organização</span><textarea id="transferReason" rows="3" minlength="3" maxlength="300" placeholder="Ex.: clientes juntaram as mesas" required></textarea></label>
+      <p class="form-error" id="transferTableError" role="alert"></p>
+      <button class="button button-primary button-large" type="submit">Confirmar mudança</button>
+    </form>
+  </dialog>
+
+  <dialog class="modal small" id="reopenTableDialog" aria-labelledby="reopenTableTitle">
+    <form id="reopenTableForm">
+      <div class="modal-heading">
+        <div><p class="eyebrow">Ação de gerente</p><h2 id="reopenTableTitle">Reabrir mesa</h2></div>
+        <button class="icon-button" id="closeReopenDialogButton" type="button" aria-label="Cancelar reabertura">×</button>
+      </div>
+      <p class="modal-help">A cobrança pendente será retirada do Caixa e a comanda voltará a aceitar pedidos.</p>
+      <label><span>Motivo</span><textarea id="reopenReason" rows="3" minlength="3" maxlength="300" placeholder="Ex.: cliente pediu mais um item" required></textarea></label>
+      <p class="form-error" id="reopenTableError" role="alert"></p>
+      <button class="button button-primary button-large" type="submit">Reabrir comanda</button>
+    </form>
+  </dialog>
+
+  <dialog class="modal small conflict-modal" id="conflictDialog" aria-labelledby="conflictDialogTitle" aria-describedby="conflictMessage">
+    <div class="modal-heading">
+      <div><p class="eyebrow">Comanda atualizada</p><h2 id="conflictDialogTitle">Revise antes de continuar</h2></div>
+    </div>
+    <p id="conflictMessage">Outro aparelho alterou esta mesa. Seu rascunho foi preservado.</p>
+    <div class="conflict-summary" id="conflictSummary"></div>
+    <button class="button button-primary button-large" id="acknowledgeConflictButton" type="button">Atualizar e revisar</button>
+  </dialog>
+
+  <dialog class="modal pizza-modal" id="pizzaDialog" aria-labelledby="pizzaDialogTitle" aria-describedby="pizzaDialogCopy">
+    <div class="modal-heading">
+      <div>
+        <p class="eyebrow">Montar pizza</p>
+        <h2 id="pizzaDialogTitle">Como deseja?</h2>
+        <p class="pizza-dialog-copy" id="pizzaDialogCopy"></p>
+      </div>
+      <button class="icon-button" id="closePizzaDialogButton" type="button" aria-label="Cancelar montagem da pizza">×</button>
+    </div>
+    <div class="pizza-dialog-content" id="pizzaDialogContent"></div>
+  </dialog>
+
+  <dialog class="modal small" id="removeItemDialog" aria-labelledby="removeItemTitle">
+    <form id="removeItemForm">
+      <div class="modal-heading">
+        <div>
+          <p class="eyebrow">Alterar pedido enviado</p>
+          <h2 id="removeItemTitle">Retirar item</h2>
+        </div>
+        <button class="icon-button" id="closeRemoveItemDialogButton" type="button" aria-label="Cancelar retirada">×</button>
+      </div>
+      <div class="remove-item-summary" id="removeItemSummary"></div>
+      <label>
+        <span>Quantidade a retirar</span>
+        <input id="removeItemQuantity" type="number" min="1" max="1" value="1" inputmode="numeric" required>
+      </label>
+      <label>
+        <span>Motivo da retirada</span>
+        <textarea id="removeItemReason" rows="3" minlength="3" maxlength="300" placeholder="Ex.: cliente desistiu deste item" required></textarea>
+      </label>
+      <label class="remove-print-option">
+        <input id="removeItemPrint" type="checkbox" checked>
+        <span>Imprimir aviso de cancelamento para a cozinha</span>
+      </label>
+      <p class="form-error" id="removeItemError" role="alert"></p>
+      <button class="button button-danger button-large" type="submit">Confirmar retirada</button>
+    </form>
+  </dialog>
+
+  <dialog class="modal print-modal" id="printPreviewDialog" aria-labelledby="printPreviewTitle">
+    <div class="modal-heading">
+      <div><p class="eyebrow">Prévia da impressão</p><h2 id="printPreviewTitle">Comanda</h2></div>
+      <button class="icon-button" id="closePreviewButton" type="button" aria-label="Fechar">×</button>
+    </div>
+    <pre id="printPreviewText"></pre>
+    <button class="button button-primary button-large" id="browserPrintButton" type="button">Imprimir pelo navegador</button>
+  </dialog>
+
+  <div class="toast is-hidden" id="toast" role="status" aria-live="polite"></div>
+  <script src="/garcom/garcom.js?v=20260812-system-audit" defer></script>
+</body>
+</html>

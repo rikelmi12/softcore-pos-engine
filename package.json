@@ -1,0 +1,28 @@
+{
+  "name": "cardapio-local",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Servidor local do cardápio com API e persistência em SQLite.",
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node --test",
+    "migrate:catalog-completion": "node tools/migrate-catalog-completion-2026-07-30.mjs",
+    "migrate:catalog-completion:dry-run": "node tools/migrate-catalog-completion-2026-07-30.mjs --dry-run",
+    "migrate:menu-report": "node tools/migrate-menu-report-2026-07-30.mjs",
+    "migrate:menu-report:dry-run": "node tools/migrate-menu-report-2026-07-30.mjs --dry-run",
+    "migrate:softcore": "node tools/migrate-softcore-safe.mjs",
+    "migrate:softcore:dry-run": "node tools/migrate-softcore-safe.mjs --dry-run",
+    "print-agent:windows": "node tools/print-agent-windows.mjs",
+    "print-agent:list-printers": "node tools/print-agent-windows.mjs --list-printers",
+    "print-agent:build-exe": "dotnet publish tools/CardapioPrintAgent/CardapioPrintAgent.csproj -c Release -r win-x64 -p:PublishSingleFile=true -p:SelfContained=true -p:EnableCompressionInSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -o tools/dist/print-agent-windows"
+  },
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "dependencies": {
+    "@xmldom/xmldom": "^0.9.10",
+    "node-forge": "^1.4.0",
+    "qrcode": "^1.5.4",
+    "xml-crypto": "^6.1.2"
+  }
+}
